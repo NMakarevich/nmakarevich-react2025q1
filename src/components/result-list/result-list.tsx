@@ -14,7 +14,8 @@ class ResultList extends Component<Props, State> {
     const { results } = this.props;
     return (
       <div className={'result-list'}>
-        {results.length > 0 &&
+        {results &&
+          results.length > 0 &&
           results.map((result) => (
             <ResultItem key={result.id} result={result} />
           ))}
