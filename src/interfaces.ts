@@ -47,4 +47,5 @@ export interface Response {
     next: string | null;
     prev: string | null;
   };
+  error?: string;
 }

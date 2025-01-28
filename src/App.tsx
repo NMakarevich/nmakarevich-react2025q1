@@ -4,6 +4,7 @@ import Search from './components/search/search.tsx';
 import { Response } from './interfaces.ts';
 import ResultList from './components/result-list/result-list.tsx';
 import Button from './components/ui/button/button.tsx';
+import ResponseError from './components/response-error/response-error.tsx';
 
 interface State {
   response: Response;
@@ -25,6 +26,7 @@ class App extends Component<Props, State> {
           next: null,
           prev: null,
         },
+        error: '',
       },
       status: 0,
       error: false,
@@ -53,7 +55,15 @@ class App extends Component<Props, State> {
         </header>
         <main className="app-main">
           <div className="container">
-            <ResultList results={this.state.response.results} />
+            {this.state.status === 200 && (
+              <ResultList results={this.state.response.results} />
+            )}
+            {this.state.status > 400 && (
+              <ResponseError
+                status={this.state.status}
+                message={this.state.response.error || ''}
+              />
+            )}
           </div>
         </main>
         <footer className="footer">
