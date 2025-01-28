@@ -18,6 +18,12 @@
 }
 
 .app-header .container {
+  position: relative;
   flex-direction: row;
   align-items: center;
+}
+
+.error-button {
+  position: absolute;
+  right: 30px;
 }
