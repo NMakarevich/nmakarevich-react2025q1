@@ -6,7 +6,9 @@ interface Props {
   handleClick: () => void;
 }
 
-class Button extends Component<Props, any> {
+type State = object;
+
+class Button extends Component<Props, State> {
   render() {
     return (
       <>

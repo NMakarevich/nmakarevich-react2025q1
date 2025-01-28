@@ -9,7 +9,7 @@ interface State {
   status: number;
 }
 
-interface Props {}
+type Props = object;
 
 class App extends Component<Props, State> {
   constructor(props: Props) {
