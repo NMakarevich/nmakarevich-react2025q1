@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1280px;
+  width: 100%;
+}
+
+.app-header .container {
+  flex-direction: row;
+  align-items: center;
+}
+
+.app-main {
+  display: flex;
+  justify-content: center;
+}
