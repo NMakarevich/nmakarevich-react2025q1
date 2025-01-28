@@ -1,0 +1,21 @@
+.result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.result-item_info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px;
+  list-style: none;
+
+  .info-title {
+    font-weight: 800;
+  }
+}
+

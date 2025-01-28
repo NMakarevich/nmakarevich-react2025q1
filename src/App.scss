@@ -1,4 +1,5 @@
 .container {
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -6,12 +7,17 @@
   width: 100%;
 }
 
-.app-header .container {
-  flex-direction: row;
-  align-items: center;
+.app-header {
+  display: flex;
+  justify-content: center;
 }
 
 .app-main {
   display: flex;
   justify-content: center;
+}
+
+.app-header .container {
+  flex-direction: row;
+  align-items: center;
 }
