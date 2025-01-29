@@ -1,13 +1,15 @@
 import { Component } from 'react';
-import { LOCAL_STORAGE_KEYS } from '../../../constants.ts';
+import { API_URL, LOCAL_STORAGE_KEYS } from '../../../constants.ts';
 import './select.scss';
+import { Resource } from '../../search/search.tsx';
 
 interface Props {
-  resources: string[];
+  getResources: (resource: Resource) => void;
   handleSelected: (value: string) => void;
 }
 
 interface State {
+  resources: Resource;
   selected: string;
   isOpen: boolean;
 }
@@ -18,12 +20,21 @@ class Select extends Component<Props, State> {
     this.state = {
       selected: '',
       isOpen: false,
+      resources: {},
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const res = await fetch(API_URL);
+    const data: Resource = await res.json();
+    const resources = Object.keys(data);
+    this.setState({ resources: data });
+    this.props.getResources(data);
     const resource = localStorage.getItem(LOCAL_STORAGE_KEYS.resource);
     if (resource) this.setState({ selected: resource });
+    else {
+      this.setState({ selected: resources[0] });
+    }
   }
 
   handleSelect = (value: string) => {
@@ -37,9 +48,9 @@ class Select extends Component<Props, State> {
   };
 
   render() {
-    const { resources } = this.props;
+    const { resources } = this.state;
     return (
-      <>
+      resources && (
         <div className={'select'}>
           <span className={'select-label'}>Select resource: </span>
           <div className={'select-list'}>
@@ -50,7 +61,7 @@ class Select extends Component<Props, State> {
               {this.state.selected}
             </span>
             <ul className={`select-options ${this.state.isOpen ? 'open' : ''}`}>
-              {resources.map((resource) => (
+              {Object.keys(resources).map((resource) => (
                 <li
                   key={resource}
                   className={'select-option'}
@@ -68,20 +79,7 @@ class Select extends Component<Props, State> {
             )}
           </div>
         </div>
-
-        {/*<select*/}
-        {/*  id={id}*/}
-        {/*  onChange={this.handleSelect}*/}
-        {/*  value={this.state.selected ? this.state.selected : ''}*/}
-        {/*  onClick={() => console.log('check')}*/}
-        {/*>*/}
-        {/*  {resources.map((resource) => (*/}
-        {/*    <option key={resource} value={resource}>*/}
-        {/*      {resource}*/}
-        {/*    </option>*/}
-        {/*  ))}*/}
-        {/*</select>*/}
-      </>
+      )
     );
   }
 }
