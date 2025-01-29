@@ -1,15 +1,12 @@
 import './App.scss';
 import { Component } from 'react';
 import Search from './components/search/search.tsx';
-import { Response } from './interfaces.ts';
 import ResultList from './components/result-list/result-list.tsx';
 import Button from './components/ui/button/button.tsx';
-import ResponseError from './components/response-error/response-error.tsx';
 
 interface State {
-  response: Response;
-  status: number;
   error: boolean;
+  requestUrl: string;
 }
 
 type Props = object;
@@ -18,18 +15,8 @@ class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      response: {
-        results: [],
-        info: {
-          count: 0,
-          pages: 0,
-          next: null,
-          prev: null,
-        },
-        error: '',
-      },
-      status: 0,
       error: false,
+      requestUrl: '',
     };
   }
 
@@ -37,8 +24,8 @@ class App extends Component<Props, State> {
     this.setState({ error: true });
   };
 
-  getResponse = (response: Response, status: number) => {
-    this.setState({ response, status });
+  getRequestUrl = (requestUrl: string) => {
+    this.setState({ requestUrl });
   };
 
   render() {
@@ -47,7 +34,7 @@ class App extends Component<Props, State> {
       <>
         <header className="app-header">
           <div className="container">
-            <Search getResponse={this.getResponse} />
+            <Search getRequestUrl={this.getRequestUrl} />
             <div className={'error-button'}>
               <Button title={'Error Test'} handleClick={this.throwError} />
             </div>
@@ -55,15 +42,7 @@ class App extends Component<Props, State> {
         </header>
         <main className="app-main">
           <div className="container">
-            {this.state.status === 200 && (
-              <ResultList results={this.state.response.results} />
-            )}
-            {this.state.status > 400 && (
-              <ResponseError
-                status={this.state.status}
-                message={this.state.response.error || ''}
-              />
-            )}
+            <ResultList requestUrl={this.state.requestUrl} />
           </div>
         </main>
         <footer className="footer">
