@@ -50,8 +50,8 @@ class ResultList extends Component<Props, State> {
     const { status, isLoading } = this.state;
     return (
       <>
+        {isLoading && <Loading />}
         <div className={'result'}>
-          {isLoading && <Loading />}
           <div className={'result-list'}>
             {results &&
               results.length > 0 &&

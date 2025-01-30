@@ -48,6 +48,7 @@
   .app-header .container {
     .select,
     .error-button{
+      margin-right: unset;
       margin-left: unset;
     }
     flex-direction: column;

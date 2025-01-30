@@ -1,5 +1,9 @@
 .loading {
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,7 +11,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   text-shadow: 0 0 15px #58A249;
-  z-index: 100;
+  z-index: 20;
 
   h3 {
     font-size: 4rem;
