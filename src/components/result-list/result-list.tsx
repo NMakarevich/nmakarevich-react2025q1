@@ -49,20 +49,24 @@ class ResultList extends Component<Props, State> {
     const { results } = this.state.response;
     const { status, isLoading } = this.state;
     return (
-      <div className={'result-list'}>
-        {isLoading && <Loading />}
-        {results &&
-          results.length > 0 &&
-          results.map((result) => (
-            <ResultItem key={result.id} result={result} />
-          ))}
-        {status > 400 && (
-          <ResponseError
-            status={status}
-            message={this.state.response.error || ''}
-          />
-        )}
-      </div>
+      <>
+        <div className={'result'}>
+          {isLoading && <Loading />}
+          <div className={'result-list'}>
+            {results &&
+              results.length > 0 &&
+              results.map((result) => (
+                <ResultItem key={result.id} result={result} />
+              ))}
+            {status > 400 && (
+              <ResponseError
+                status={status}
+                message={this.state.response.error || ''}
+              />
+            )}
+          </div>
+        </div>
+      </>
     );
   }
 }

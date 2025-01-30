@@ -5,7 +5,7 @@
 }
 
 .container {
-  padding: 10px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,21 +18,35 @@
   justify-content: center;
   background-color: #2B2930;
   box-shadow: 0 2px 4px 2px rgba(147, 153, 143, 0.2);
+
+  & .container {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .app-main {
+  flex: 1;
   display: flex;
   justify-content: center;
   padding-top: 20px;
-}
 
-.app-header .container {
-  position: relative;
-  flex-direction: row;
-  align-items: center;
+  & .container {
+    position: relative;
+  }
 }
 
 .error-button {
-  position: absolute;
-  right: 30px;
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .app-header .container {
+    .select,
+    .error-button{
+      margin-left: unset;
+    }
+    flex-direction: column;
+    gap: 10px;
+  }
 }
