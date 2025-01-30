@@ -1,10 +1,11 @@
 .button {
   padding: 5px;
   text-align: center;
-  cursor: pointer;
   background-color: #E6E0E9;
   border: 1px solid #938F99;
   border-radius: 5px;
+  color: black;
+  cursor: pointer;
   transition: background-color 0.4s;
 
   &:hover {
