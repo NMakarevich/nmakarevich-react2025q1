@@ -7,22 +7,22 @@
 
   &-list {
     position: relative;
-    width: 100px;
+    width: 125px;
   }
 
   &-value {
     display: flex;
     align-items: center;
-    padding: 5px;
-    background-color: #E6E0E9;
-    border: 1px solid #938F99;
-    color: #000;
-    border-radius: 2px;
+    padding: 5px 20px 5px 5px;
+    background-color: #49454f;
+    border: 1px solid #00a8c9;
+    color: #00a8c9;
+    border-radius: 5px;
     cursor: pointer;
     transition: border-color 0.4s;
 
     &:hover {
-      border-color: #322F35;
+      box-shadow: 0 0 4px #58a249;
     }
 
     &::after {
@@ -46,7 +46,7 @@
     right: 0;
     width: 100%;
     list-style: none;
-    z-index: 10;
+    z-index: 30;
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.5s;
@@ -62,15 +62,21 @@
     justify-content: center;
     align-items: center;
     padding: 5px;
-    background-color: #E6E0E9;
-    color: black;
-    border: 1px solid #938F99;
-    border-top: none;
+    background-color: #49454f;
+    color: #00a8c9;
+    border: 1px solid #00a8c9;
     cursor: pointer;
+
+    &:first-child {
+      border-radius: 5px 5px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 5px 5px;
+    }
 
     &:hover {
       background-color: #322F35;
-      color: white;
     }
   }
 
@@ -80,5 +86,6 @@
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 25;
   }
 }

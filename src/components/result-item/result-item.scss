@@ -3,20 +3,28 @@
   flex-direction: column;
   gap: 10px;
   background-color: #49454F;
-  border: 1px solid #938F99;
+  border: 2px solid #00a8c9;
+  box-shadow: 0 0 4px 4px #58a249;
   border-radius: 5px;
   overflow: hidden;
-}
 
-.result-item_info-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 5px;
-  list-style: none;
+  &_info {
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 5px;
+      list-style: none;
 
-  .info-title {
-    font-weight: 800;
+      .info-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+      }
+    }
+
+    &-item {
+      font-size: 1.25rem;
+    }
   }
 }
 

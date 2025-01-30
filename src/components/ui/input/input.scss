@@ -1,6 +1,19 @@
 .input {
   padding: 5px;
-  background-color: #E6E0E9;
-  border: 1px solid #938F99;
+  background-color: #49454F;
+  border: 1px solid #00a8c9;
   border-radius: 5px;
+  color: #00a8c9;
+  font-size: 1.5rem;
+
+  &:hover {
+    box-shadow: 0 0 4px 0 #58a249;
+  }
 }
+
+@media (max-width: 600px) {
+  .input {
+    font-size: 1.25rem;
+  }
+}
+
