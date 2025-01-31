@@ -2,7 +2,7 @@ import { Component } from 'react';
 // import { Character, Episode, Location } from '../../interfaces.ts';
 import ResultItem from '../result-item/result-item.tsx';
 import './result-list.scss';
-import { Response } from '../../interfaces.ts';
+import { Character, Response } from '../../interfaces.ts';
 import ResponseError from '../response-error/response-error.tsx';
 import Loading from '../ui/loading/loading.tsx';
 
@@ -41,6 +41,19 @@ class ResultList extends Component<Props, State> {
       const resp = await fetch(this.props.requestUrl);
       const status = resp.status;
       const data: Response = await resp.json();
+      if ('image' in data.results[0] && data.results[0].image) {
+        const images = data.results.map((item) => (item as Character).image);
+        const promises = images.map((image) => {
+          return new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.src = image;
+            img.alt = image;
+            img.onload = () => resolve(img);
+            img.onerror = () => reject();
+          });
+        });
+        await Promise.all(promises);
+      }
       this.setState({ response: data, status, isLoading: false });
     }
   }
