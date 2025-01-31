@@ -1,5 +1,4 @@
 import { Component } from 'react';
-// import { Character, Episode, Location } from '../../interfaces.ts';
 import ResultItem from '../result-item/result-item.tsx';
 import './result-list.scss';
 import { Character, Response } from '../../interfaces.ts';
