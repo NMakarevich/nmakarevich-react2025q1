@@ -8,7 +8,8 @@ class Loading extends Component<Props, State> {
   render() {
     return (
       <div className="loading">
-        <h3>Loading...</h3>
+        <div className={'loading-image'}></div>
+        <h3 className={'loading-title'}>Loading...</h3>
       </div>
     );
   }
