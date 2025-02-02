@@ -40,7 +40,7 @@ class ResultList extends Component<Props, State> {
       const resp = await fetch(this.props.requestUrl);
       const status = resp.status;
       const data: Response = await resp.json();
-      if ('image' in data.results[0] && data.results[0].image) {
+      if (!data.error && 'image' in data.results[0] && data.results[0].image) {
         const images = data.results.map((item) => (item as Character).image);
         const promises = images.map((image) => {
           return new Promise<HTMLImageElement>((resolve, reject) => {
