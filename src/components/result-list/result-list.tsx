@@ -32,7 +32,7 @@ function ResultList(props: Props): React.ReactNode {
       const resp = await fetch(requestUrl);
       const status = resp.status;
       const data: Response = await resp.json();
-      if ('image' in data.results[0] && data.results[0].image) {
+      if (!data.error && 'image' in data.results[0] && data.results[0].image) {
         const images = data.results.map((item) => (item as Character).image);
         const promises = images.map((image) => {
           return new Promise<HTMLImageElement>((resolve, reject) => {
