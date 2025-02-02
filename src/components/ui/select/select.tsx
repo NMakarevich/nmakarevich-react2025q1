@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { API_URL, LOCAL_STORAGE_KEYS } from '../../../constants.ts';
 import './select.scss';
 import { Resource } from '../../search/search.tsx';
@@ -8,80 +8,69 @@ interface Props {
   handleSelected: (value: string) => void;
 }
 
-interface State {
-  resources: Resource;
-  selected: string;
-  isOpen: boolean;
-}
+function Select(props: Props): React.ReactNode {
+  const [selected, setSelected] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [resources, setResources] = useState<Resource>({});
 
-class Select extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      selected: '',
-      isOpen: false,
-      resources: {},
-    };
-  }
+  const { getResources, handleSelected } = props;
 
-  async componentDidMount() {
+  useEffect(() => {
+    loadResources().then(() => {});
+  });
+
+  async function loadResources() {
     const res = await fetch(API_URL);
     const data: Resource = await res.json();
     const resources = Object.keys(data);
-    this.setState({ resources: data });
-    this.props.getResources(data);
+    setResources(data);
+    getResources(data);
     const resource = localStorage.getItem(LOCAL_STORAGE_KEYS.resource);
-    if (resource) this.setState({ selected: resource });
+    if (resource) setSelected(resource);
     else {
-      this.setState({ selected: resources[0] });
+      setSelected(resources[0]);
     }
   }
 
-  handleSelect = (value: string) => {
-    this.setState({ selected: value });
-    this.props.handleSelected(value);
-    this.setState({ isOpen: false });
-  };
-
-  toggleSelect = () => {
-    this.setState({ isOpen: !this.state.isOpen });
-  };
-
-  render() {
-    const { resources } = this.state;
-    return (
-      resources && (
-        <div className={'select'}>
-          <span className={'select-label'}>Select resource: </span>
-          <div className={'select-list'}>
-            <span
-              className={`select-value ${this.state.isOpen ? 'open' : ''}`}
-              onClick={this.toggleSelect}
-            >
-              {this.state.selected}
-            </span>
-            <ul className={`select-options ${this.state.isOpen ? 'open' : ''}`}>
-              {Object.keys(resources).map((resource) => (
-                <li
-                  key={resource}
-                  className={'select-option'}
-                  onClick={() => this.handleSelect(resource)}
-                >
-                  {resource}
-                </li>
-              ))}
-            </ul>
-            {this.state.isOpen && (
-              <div
-                className={'select-overlay'}
-                onClick={this.toggleSelect}
-              ></div>
-            )}
-          </div>
-        </div>
-      )
-    );
+  function handleSelect(value: string) {
+    setSelected(value);
+    handleSelected(value);
+    setIsOpen(false);
   }
+
+  function toggleSelect() {
+    setIsOpen(!isOpen);
+  }
+
+  return (
+    resources && (
+      <div className={'select'}>
+        <span className={'select-label'}>Select resource: </span>
+        <div className={'select-list'}>
+          <span
+            className={`select-value ${isOpen ? 'open' : ''}`}
+            onClick={toggleSelect}
+          >
+            {selected}
+          </span>
+          <ul className={`select-options ${isOpen ? 'open' : ''}`}>
+            {Object.keys(resources).map((resource) => (
+              <li
+                key={resource}
+                className={'select-option'}
+                onClick={() => handleSelect(resource)}
+              >
+                {resource}
+              </li>
+            ))}
+          </ul>
+          {isOpen && (
+            <div className={'select-overlay'} onClick={toggleSelect}></div>
+          )}
+        </div>
+      </div>
+    )
+  );
 }
 
 export default Select;

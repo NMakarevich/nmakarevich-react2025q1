@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import './button.scss';
 
 interface Props {
@@ -6,22 +6,16 @@ interface Props {
   handleClick: () => void;
 }
 
-type State = object;
+function Button(props: Props): React.ReactNode {
+  const { title, handleClick } = props;
 
-class Button extends Component<Props, State> {
-  render() {
-    return (
-      <>
-        <button
-          className={'button'}
-          type="button"
-          onClick={this.props.handleClick}
-        >
-          {this.props.title}
-        </button>
-      </>
-    );
-  }
+  return (
+    <>
+      <button className={'button'} type="button" onClick={handleClick}>
+        {title}
+      </button>
+    </>
+  );
 }
 
 export default Button;

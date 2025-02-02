@@ -1,15 +1,9 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
 import Select from '../ui/select/select.tsx';
 import './search.scss';
-
-interface State {
-  search: string;
-  resources: Resource;
-  selectedResource: string;
-}
 
 export interface Resource {
   [resource: string]: string;
@@ -19,62 +13,58 @@ interface Props {
   getRequestUrl: (requestUrl: string) => void;
 }
 
-class Search extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    const search = localStorage.getItem(LOCAL_STORAGE_KEYS.search) ?? '';
-    const resource = localStorage.getItem(LOCAL_STORAGE_KEYS.resource) ?? '';
-    this.state = {
-      search: search,
-      resources: {},
-      selectedResource: resource,
-    };
+function Search(props: Props): React.ReactNode {
+  const [search, setSearch] = useState<string>(getSearchFromLS);
+  const [selectedResource, setSelectedResource] = useState<string>(
+    getSelectedResourceFromLS
+  );
+  const [resources, setResources] = useState<Resource>({});
+
+  const { getRequestUrl } = props;
+
+  function getSearchFromLS() {
+    return localStorage.getItem(LOCAL_STORAGE_KEYS.search) ?? '';
   }
 
-  handleButtonClick = () => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.search, this.state.search);
-    localStorage.setItem(
-      LOCAL_STORAGE_KEYS.resource,
-      this.state.selectedResource
-    );
-    const url = this.state.resources[this.state.selectedResource];
-    this.props.getRequestUrl(`${url}/?name=${this.state.search}`);
-  };
+  function getSelectedResourceFromLS() {
+    return localStorage.getItem(LOCAL_STORAGE_KEYS.resource) ?? '';
+  }
 
-  selectResource = (resource: string) => {
-    this.setState({ selectedResource: resource });
-  };
+  function handleButtonClick() {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.search, search);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.resource, selectedResource);
+    const url = resources[selectedResource];
+    getRequestUrl(`${url}/?name=${search}`);
+  }
 
-  getInputValue = (value: string) => {
-    this.setState({ search: value });
-  };
+  function selectResource(resource: string) {
+    setSelectedResource(resource);
+  }
 
-  getResources = (resources: Resource) => {
-    if (!this.state.selectedResource)
-      this.setState({ selectedResource: Object.keys(resources)[0] });
-    this.setState({ resources });
-  };
+  function getInputValue(value: string) {
+    setSearch(value);
+  }
 
-  render() {
-    return (
-      <>
-        <Select
-          getResources={this.getResources}
-          handleSelected={this.selectResource}
+  function getResources(resources: Resource) {
+    if (!selectedResource) setSelectedResource(Object.keys(resources)[0]);
+    setResources(resources);
+  }
+
+  return (
+    <>
+      <Select getResources={getResources} handleSelected={selectResource} />
+      <div className={'search'}>
+        <Input
+          name={'search'}
+          id={'search'}
+          type={'text'}
+          search={search}
+          searchValue={getInputValue}
         />
-        <div className={'search'}>
-          <Input
-            name={'search'}
-            id={'search'}
-            type={'text'}
-            search={this.state.search}
-            searchValue={this.getInputValue}
-          />
-          <Button title="Search" handleClick={this.handleButtonClick} />
-        </div>
-      </>
-    );
-  }
+        <Button title="Search" handleClick={handleButtonClick} />
+      </div>
+    </>
+  );
 }
 
 export default Search;
