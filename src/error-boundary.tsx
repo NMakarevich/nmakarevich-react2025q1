@@ -26,6 +26,10 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error: Error) {
+    console.log(`Error boundary catch error: ${error.message}`);
+  }
+
   render() {
     if (this.state.hasError) {
       return <Fallback error={this.state.error} resetError={this.resetError} />;
