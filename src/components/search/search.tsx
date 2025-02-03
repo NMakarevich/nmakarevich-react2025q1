@@ -33,8 +33,9 @@ function Search(props: Props): React.ReactNode {
     getRequestUrl(`${resource.url}/?name=${search}`);
   }
 
-  function selectResource(resource: SelectedResource) {
-    setResource(resource);
+  function selectResource(selectedResource: SelectedResource) {
+    if (!resource.url) getRequestUrl(`${selectedResource.url}/?name=${search}`);
+    setResource(selectedResource);
   }
 
   function getInputValue(value: string) {
