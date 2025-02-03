@@ -4,6 +4,7 @@ import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
 import './search.scss';
 import SelectResource from '../selectResource/selectResource.tsx';
+import useLocalStorage from '../../hooks/local-storage.tsx';
 
 export interface SelectedResource {
   name: string;
@@ -15,21 +16,23 @@ interface Props {
 }
 
 function Search(props: Props): React.ReactNode {
-  const [search, setSearch] = useState<string>(getSearchFromLS);
+  const [localStorageSearch, setLocalStorageSearch] = useLocalStorage(
+    LOCAL_STORAGE_KEYS.search
+  );
+  const [localStorageResource, setLocalStorageResource] = useLocalStorage(
+    LOCAL_STORAGE_KEYS.resource
+  );
+  const [search, setSearch] = useState<string>(localStorageSearch);
   const [resource, setResource] = useState<SelectedResource>({
-    name: '',
+    name: localStorageResource,
     url: '',
   });
 
   const { getRequestUrl } = props;
 
-  function getSearchFromLS() {
-    return localStorage.getItem(LOCAL_STORAGE_KEYS.search) ?? '';
-  }
-
   function handleButtonClick() {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.search, search);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.resource, resource.name);
+    setLocalStorageSearch(search);
+    setLocalStorageResource(resource.name);
     getRequestUrl(`${resource.url}/?name=${search}`);
   }
 

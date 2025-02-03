@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { API_URL, LOCAL_STORAGE_KEYS } from '../../constants.ts';
 import Select from '../ui/select/select.tsx';
 import { SelectedResource } from '../search/search.tsx';
+import useLocalStorage from '../../hooks/local-storage.tsx';
 
 export interface Resource {
   [resource: string]: string;
@@ -13,13 +14,10 @@ interface Props {
 
 function SelectResource(props: Props): React.ReactNode {
   const [resources, setResources] = useState<Resource>({});
-  const [selected, setSelected] = useState(getSelectedResourceFromLS());
+  const [selectedResource] = useLocalStorage(LOCAL_STORAGE_KEYS.resource);
+  const [selected, setSelected] = useState(selectedResource);
 
   const { handleSelected } = props;
-
-  function getSelectedResourceFromLS() {
-    return localStorage.getItem(LOCAL_STORAGE_KEYS.resource) ?? '';
-  }
 
   useEffect(() => {
     async function loadResources() {
