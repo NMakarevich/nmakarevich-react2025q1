@@ -1,36 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { API_URL, LOCAL_STORAGE_KEYS } from '../../../constants.ts';
+import React, { useState } from 'react';
 import './select.scss';
-import { Resource } from '../../search/search.tsx';
 
 interface Props {
-  getResources: (resource: Resource) => void;
+  options: string[];
+  defaultValue: string;
   handleSelected: (value: string) => void;
 }
 
 function Select(props: Props): React.ReactNode {
+  const { options, defaultValue, handleSelected } = props;
   const [selected, setSelected] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [resources, setResources] = useState<Resource>({});
-
-  const { getResources, handleSelected } = props;
-
-  useEffect(() => {
-    loadResources().then(() => {});
-  });
-
-  async function loadResources() {
-    const res = await fetch(API_URL);
-    const data: Resource = await res.json();
-    const resources = Object.keys(data);
-    setResources(data);
-    getResources(data);
-    const resource = localStorage.getItem(LOCAL_STORAGE_KEYS.resource);
-    if (resource) setSelected(resource);
-    else {
-      setSelected(resources[0]);
-    }
-  }
 
   function handleSelect(value: string) {
     setSelected(value);
@@ -43,7 +23,7 @@ function Select(props: Props): React.ReactNode {
   }
 
   return (
-    resources && (
+    options && (
       <div className={'select'}>
         <span className={'select-label'}>Select resource: </span>
         <div className={'select-list'}>
@@ -51,16 +31,16 @@ function Select(props: Props): React.ReactNode {
             className={`select-value ${isOpen ? 'open' : ''}`}
             onClick={toggleSelect}
           >
-            {selected}
+            {selected || defaultValue}
           </span>
           <ul className={`select-options ${isOpen ? 'open' : ''}`}>
-            {Object.keys(resources).map((resource) => (
+            {options.map((option) => (
               <li
-                key={resource}
+                key={option}
                 className={'select-option'}
-                onClick={() => handleSelect(resource)}
+                onClick={() => handleSelect(option)}
               >
-                {resource}
+                {option}
               </li>
             ))}
           </ul>

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
-import Select from '../ui/select/select.tsx';
 import './search.scss';
+import SelectResource from '../selectResource/selectResource.tsx';
 
-export interface Resource {
-  [resource: string]: string;
+export interface SelectedResource {
+  name: string;
+  url: string;
 }
 
 interface Props {
@@ -15,10 +16,10 @@ interface Props {
 
 function Search(props: Props): React.ReactNode {
   const [search, setSearch] = useState<string>(getSearchFromLS);
-  const [selectedResource, setSelectedResource] = useState<string>(
-    getSelectedResourceFromLS
-  );
-  const [resources, setResources] = useState<Resource>({});
+  const [resource, setResource] = useState<SelectedResource>({
+    name: '',
+    url: '',
+  });
 
   const { getRequestUrl } = props;
 
@@ -26,33 +27,23 @@ function Search(props: Props): React.ReactNode {
     return localStorage.getItem(LOCAL_STORAGE_KEYS.search) ?? '';
   }
 
-  function getSelectedResourceFromLS() {
-    return localStorage.getItem(LOCAL_STORAGE_KEYS.resource) ?? '';
-  }
-
   function handleButtonClick() {
     localStorage.setItem(LOCAL_STORAGE_KEYS.search, search);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.resource, selectedResource);
-    const url = resources[selectedResource];
-    getRequestUrl(`${url}/?name=${search}`);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.resource, resource.name);
+    getRequestUrl(`${resource.url}/?name=${search}`);
   }
 
-  function selectResource(resource: string) {
-    setSelectedResource(resource);
+  function selectResource(resource: SelectedResource) {
+    setResource(resource);
   }
 
   function getInputValue(value: string) {
     setSearch(value);
   }
 
-  function getResources(resources: Resource) {
-    if (!selectedResource) setSelectedResource(Object.keys(resources)[0]);
-    setResources(resources);
-  }
-
   return (
     <>
-      <Select getResources={getResources} handleSelected={selectResource} />
+      <SelectResource handleSelected={selectResource} />
       <div className={'search'}>
         <Input
           name={'search'}
