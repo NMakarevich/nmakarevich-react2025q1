@@ -50,9 +50,14 @@ class Search extends Component<Props, State> {
   };
 
   getResources = (resources: Resource) => {
-    if (!this.state.selectedResource)
-      this.setState({ selectedResource: Object.keys(resources)[0] });
+    let url = '';
+    if (!this.state.selectedResource) {
+      const selectedResource = Object.keys(resources)[0];
+      this.setState({ selectedResource });
+      url = resources[selectedResource];
+    } else url = resources[this.state.selectedResource];
     this.setState({ resources });
+    this.props.getRequestUrl(url);
   };
 
   render() {

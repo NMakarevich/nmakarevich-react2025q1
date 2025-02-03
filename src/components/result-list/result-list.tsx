@@ -36,26 +36,30 @@ class ResultList extends Component<Props, State> {
 
   async componentDidUpdate(prevProps: Readonly<Props>) {
     if (prevProps.requestUrl !== this.props.requestUrl) {
-      this.setState({ isLoading: true });
-      const resp = await fetch(this.props.requestUrl);
-      const status = resp.status;
-      const data: Response = await resp.json();
-      if (!data.error && 'image' in data.results[0] && data.results[0].image) {
-        const images = data.results.map((item) => (item as Character).image);
-        const promises = images.map((image) => {
-          return new Promise<HTMLImageElement>((resolve, reject) => {
-            const img = new Image();
-            img.src = image;
-            img.alt = image;
-            img.onload = () => resolve(img);
-            img.onerror = () => reject();
-          });
-        });
-        await Promise.all(promises);
-      }
-      this.setState({ response: data, status, isLoading: false });
+      await this.loadData();
     }
   }
+
+  loadData = async () => {
+    this.setState({ isLoading: true });
+    const resp = await fetch(this.props.requestUrl);
+    const status = resp.status;
+    const data: Response = await resp.json();
+    if (!data.error && 'image' in data.results[0] && data.results[0].image) {
+      const images = data.results.map((item) => (item as Character).image);
+      const promises = images.map((image) => {
+        return new Promise<HTMLImageElement>((resolve, reject) => {
+          const img = new Image();
+          img.src = image;
+          img.alt = image;
+          img.onload = () => resolve(img);
+          img.onerror = () => reject();
+        });
+      });
+      await Promise.all(promises);
+    }
+    this.setState({ response: data, status, isLoading: false });
+  };
 
   render() {
     const { results } = this.state.response;
