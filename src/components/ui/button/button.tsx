@@ -9,12 +9,17 @@ interface Props {
 }
 
 function Button(props: Props): React.ReactNode {
-  const { title, handleClick } = props;
+  const { title, handleClick, disabled } = props;
   const type = props.type ?? 'button';
 
   return (
     <>
-      <button className={'button'} type={type} onClick={handleClick}>
+      <button
+        className={'button'}
+        type={type}
+        onClick={handleClick}
+        disabled={disabled}
+      >
         {title}
       </button>
     </>
