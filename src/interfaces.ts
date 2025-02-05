@@ -45,6 +45,11 @@ export interface Response {
   error?: string;
 }
 
+export interface ResponseDetailed {
+  data: Character | Location | Episode | null;
+  error?: string;
+}
+
 export interface ResponseInfo {
   count: number;
   pages: number;

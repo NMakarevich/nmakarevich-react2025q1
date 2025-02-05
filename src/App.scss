@@ -33,6 +33,8 @@
 
   & .container {
     position: relative;
+    flex-direction: row;
+    gap: 20px;
   }
 }
 
