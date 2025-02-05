@@ -15,10 +15,6 @@ function ResultItemEpisode(props: Props): React.ReactNode {
           <span className={'info-title'}>Name:</span> {result.name}
         </li>
         <li className={'result-item_info-item'}>
-          <span className={'info-title'}>Air Date:</span>{' '}
-          {result.air_date || 'unknown'}
-        </li>
-        <li className={'result-item_info-item'}>
           <span className={'info-title'}>Episode:</span> {result.episode}
         </li>
       </ul>
