@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { API_URL } from '../../constants.ts';
 import Loading from '../ui/loading/loading.tsx';
 import './detailed-item.scss';
@@ -18,6 +18,7 @@ function DetailedItem(): React.ReactNode {
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadData() {
@@ -45,6 +46,13 @@ function DetailedItem(): React.ReactNode {
     loadData().then(() => {});
   }, [searchParams]);
 
+  function closeDetails() {
+    const params = new URLSearchParams(searchParams);
+    params.delete('resource');
+    params.delete('id');
+    navigate(`/search?${params.toString()}`);
+  }
+
   return (
     searchParams.size && (
       <div className={'detailed'}>
@@ -52,6 +60,9 @@ function DetailedItem(): React.ReactNode {
           <Loading />
         ) : !response.error ? (
           <div className={'detailed-item'}>
+            <div className={'detailed-close'} onClick={closeDetails}>
+              Close
+            </div>
             {response.data &&
               'image' in response.data &&
               response.data.image && (
