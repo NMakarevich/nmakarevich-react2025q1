@@ -5,6 +5,7 @@ import App from './App.tsx';
 import ErrorBoundary from './error-boundary.tsx';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import DetailedItem from './components/detailed-item/detailed-item.tsx';
+import NotFoundPage from './pages/NotFound/not-found.tsx';
 
 const root = document.getElementById('root');
 
@@ -18,6 +19,7 @@ if (root)
             <Route path={'/search'} element={<App />}>
               <Route index path={'details'} element={<DetailedItem />} />
             </Route>
+            <Route path={'*'} element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
