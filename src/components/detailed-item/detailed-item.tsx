@@ -28,16 +28,6 @@ function DetailedItem(): React.ReactNode {
         setIsLoading(true);
         const res = await fetch(`${API_URL}/${resource}/${id}`);
         const data = await res.json();
-        if (data && 'image' in data && data.image) {
-          const promise = new Promise((resolve, reject) => {
-            const image = new Image();
-            image.src = data.image;
-            image.alt = data.name;
-            image.onload = () => resolve(image);
-            image.onerror = () => reject();
-          });
-          await promise;
-        }
         setResponse(data?.error ? data : { data });
         setStatus(res.status);
         setIsLoading(false);
