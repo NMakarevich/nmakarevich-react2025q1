@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ResultItem from '../result-item/result-item.tsx';
 import './result-list.scss';
-import { Character, Response } from '../../interfaces.ts';
+import { Response } from '../../interfaces.ts';
 import ResponseError from '../response-error/response-error.tsx';
 import Loading from '../ui/loading/loading.tsx';
 import Pagination from '../pagination/pagination.tsx';
@@ -56,19 +56,6 @@ function ResultList(props: Props): React.ReactNode {
       const resp = await fetch(requestUrl);
       const status = resp.status;
       const data: Response = await resp.json();
-      if (!data.error && 'image' in data.results[0] && data.results[0].image) {
-        const images = data.results.map((item) => (item as Character).image);
-        const promises = images.map((image) => {
-          return new Promise<HTMLImageElement>((resolve, reject) => {
-            const img = new Image();
-            img.src = image;
-            img.alt = image;
-            img.onload = () => resolve(img);
-            img.onerror = () => reject();
-          });
-        });
-        await Promise.all(promises);
-      }
       setResponse(data);
       setStatus(status);
       setIsLoading(false);
