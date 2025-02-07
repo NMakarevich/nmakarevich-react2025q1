@@ -3,12 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Search from './components/search/search.tsx';
 import ResultList from './components/result-list/result-list.tsx';
 import Button from './components/ui/button/button.tsx';
-import {
-  Outlet,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 
 function App(): React.ReactNode {
   const [error, setError] = useState<boolean>(false);
@@ -79,7 +74,6 @@ function App(): React.ReactNode {
       <main className="app-main">
         <div className="container">
           <ResultList requestUrl={requestUrl} />
-          <Outlet />
         </div>
       </main>
       <footer className="footer">

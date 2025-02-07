@@ -5,7 +5,13 @@ import { Response } from '../../interfaces.ts';
 import ResponseError from '../response-error/response-error.tsx';
 import Loading from '../ui/loading/loading.tsx';
 import Pagination from '../pagination/pagination.tsx';
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router';
 
 interface Props {
   requestUrl: string;
@@ -75,22 +81,25 @@ function ResultList(props: Props): React.ReactNode {
     <>
       {isLoading && <Loading />}
       {response.results && response.results.length > 0 ? (
-        <div className={'result'}>
-          <Pagination info={response.info} />
-          <div className={'result-wrapper'}>
-            <div className={'result-list'} onClick={closeDetails}>
-              {response.results.map((result) => (
-                <Link
-                  to={`./details?${openDetails(result.id.toString())}`}
-                  key={result.id}
-                  state={requestUrl}
-                >
-                  <ResultItem result={result} />
-                </Link>
-              ))}
+        <>
+          <div className={'result'}>
+            <Pagination info={response.info} />
+            <div className={'result-wrapper'}>
+              <div className={'result-list'} onClick={closeDetails}>
+                {response.results.map((result) => (
+                  <Link
+                    to={`./details?${openDetails(result.id.toString())}`}
+                    key={result.id}
+                    state={requestUrl}
+                  >
+                    <ResultItem result={result} />
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+          <Outlet />
+        </>
       ) : (
         response.error && (
           <ResponseError status={status} message={response.error || ''} />
