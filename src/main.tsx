@@ -16,8 +16,9 @@ if (root)
         <BrowserRouter>
           <Routes>
             <Route path={'/'} element={<Navigate to={'search'} />} />
-            <Route path={'/search'} element={<App />}>
-              <Route index path={'details'} element={<DetailedItem />} />
+            <Route path={'/search'} element={<App />} />
+            <Route path={'/search/:resource'} element={<App />}>
+              <Route index path={':id'} element={<DetailedItem />} />
             </Route>
             <Route path={'*'} element={<NotFoundPage />} />
           </Routes>

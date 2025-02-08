@@ -5,6 +5,7 @@ import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
 import './search.scss';
 import SelectResource from '../selectResource/selectResource.tsx';
 import useLocalStorage from '../../hooks/local-storage.tsx';
+import { useNavigate, useParams } from 'react-router';
 
 export interface SelectedResource {
   name: string;
@@ -22,23 +23,30 @@ function Search(props: Props): React.ReactNode {
   const [localStorageResource, setLocalStorageResource] = useLocalStorage(
     LOCAL_STORAGE_KEYS.resource
   );
+  const { resource } = useParams();
   const [search, setSearch] = useState<string>(localStorageSearch);
-  const [resource, setResource] = useState<SelectedResource>({
-    name: localStorageResource,
+  const [selectedResource, setSelectedResource] = useState<SelectedResource>({
+    name: resource || localStorageResource,
     url: '',
   });
+  const navigate = useNavigate();
 
   const { getRequestUrl } = props;
 
   function handleButtonClick() {
     setLocalStorageSearch(search);
-    setLocalStorageResource(resource.name);
-    getRequestUrl(`${resource.url}/?name=${search}`);
+    setLocalStorageResource(selectedResource.name);
+    getRequestUrl(`${selectedResource.url}${search ? `?name=${search}` : ''}`);
+    if (resource !== selectedResource.name) {
+      navigate(`/search/${selectedResource.name}`);
+    }
   }
 
-  function selectResource(selectedResource: SelectedResource) {
-    if (!resource.url) getRequestUrl(`${selectedResource.url}/?name=${search}`);
-    setResource(selectedResource);
+  function selectResource(res: SelectedResource) {
+    if (!selectedResource.url) {
+      getRequestUrl(`${res.url}${search ? `?name=${search}` : ''}`);
+    }
+    setSelectedResource(res);
   }
 
   function getInputValue(value: string) {

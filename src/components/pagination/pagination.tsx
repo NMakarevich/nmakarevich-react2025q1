@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ResponseInfo } from '../../interfaces.ts';
 import Button from '../ui/button/button.tsx';
 import './pagination.scss';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 
 interface Props {
   info: ResponseInfo;
@@ -16,6 +16,7 @@ function Pagination(props: Props): React.ReactNode {
 
   const [page, setPage] = useState(parseInt(currentPage, 10));
   const navigate = useNavigate();
+  const { resource } = useParams();
 
   useEffect(() => {
     const urlPage = searchParams.get('page') || '1';
@@ -24,23 +25,19 @@ function Pagination(props: Props): React.ReactNode {
 
   function prevPage() {
     const params = new URLSearchParams(searchParams);
-    params.delete('resource');
-    params.delete('id');
     if (prev) {
       params.set('page', (page - 1).toString());
       setPage((prev) => prev - 1);
-      navigate(`/search?${params.toString()}`, { state: prev });
+      navigate(`/search/${resource}?${params.toString()}`, { state: prev });
     }
   }
 
   function nextPage() {
     const params = new URLSearchParams(searchParams);
-    params.delete('resource');
-    params.delete('id');
     if (next) {
       params.set('page', (page + 1).toString());
       setPage((prev) => prev + 1);
-      navigate(`/search?${params.toString()}`, { state: next });
+      navigate(`/search/${resource}?${params.toString()}`, { state: next });
     }
   }
 

@@ -27,29 +27,6 @@ function App(): React.ReactNode {
   }, [location]);
 
   useEffect(() => {
-    if (requestUrl && location.state) {
-      const requestPathname = requestUrl.split('?')[0];
-      const statePathname = location.state.split('?')[0];
-      const requestName = new URLSearchParams(requestUrl.split('?')[1]).get(
-        'name'
-      );
-      const stateName = new URLSearchParams(location.state.split('?')[1]).get(
-        'name'
-      );
-      if (
-        requestPathname !== statePathname ||
-        (requestName && stateName && requestName !== stateName)
-      ) {
-        const params = new URLSearchParams(searchParams);
-        params.delete('resource');
-        params.delete('id');
-        params.set('page', '1');
-        navigate(`/search?${params.toString()}`);
-      }
-    }
-  }, [requestUrl, location, searchParams, navigate]);
-
-  useEffect(() => {
     if (error) throw new Error('Test error boundary');
   }, [error]);
 

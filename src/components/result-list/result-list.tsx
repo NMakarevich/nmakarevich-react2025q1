@@ -10,6 +10,7 @@ import {
   Outlet,
   useLocation,
   useNavigate,
+  useParams,
   useSearchParams,
 } from 'react-router';
 
@@ -36,30 +37,23 @@ function ResultList(props: Props): React.ReactNode {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { resource, id } = useParams();
 
   function closeDetails() {
-    const params = new URLSearchParams(searchParams);
-    if (location.pathname.includes('details')) {
-      params.delete('resource');
-      params.delete('id');
-      navigate(`/search?${params.toString()}`);
-    }
-  }
-
-  function openDetails(id: string) {
-    const params = new URLSearchParams(searchParams);
-    if (!location.pathname.includes('details')) {
-      params.set('resource', getResourceFromURL() as string);
-      params.set('id', id);
-      return params;
-    }
+    if (id && location.pathname.includes(id))
+      navigate(`/search/${resource}?${searchParams.toString()}`);
   }
 
   useEffect(() => {
     async function loadData() {
       if (!requestUrl) return;
       setIsLoading(true);
-      const resp = await fetch(requestUrl);
+      const page = searchParams.get('page');
+      const params = new URLSearchParams(requestUrl.split('?')[1]);
+      if (!params.has('page') && page) params.set('page', page);
+      const resp = await fetch(
+        `${requestUrl.split('?')[0]}?${params.toString()}`
+      );
       const status = resp.status;
       const data: Response = await resp.json();
       setResponse(data);
@@ -67,15 +61,7 @@ function ResultList(props: Props): React.ReactNode {
       setIsLoading(false);
     }
     loadData().then(() => {});
-  }, [requestUrl]);
-
-  function getResourceFromURL() {
-    return requestUrl
-      .split('?')[0]
-      .split('/')
-      .filter((item) => item)
-      .pop();
-  }
+  }, [requestUrl, searchParams]);
 
   return (
     <>
@@ -88,7 +74,7 @@ function ResultList(props: Props): React.ReactNode {
               <div className={'result-list'} onClick={closeDetails}>
                 {response.results.map((result) => (
                   <Link
-                    to={`./details?${openDetails(result.id.toString())}`}
+                    to={`/search/${resource}/${result.id}?${searchParams.toString()}`}
                     key={result.id}
                     state={requestUrl}
                   >
