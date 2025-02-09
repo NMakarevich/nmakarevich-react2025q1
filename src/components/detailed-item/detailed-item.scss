@@ -18,5 +18,10 @@
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+    transition: text-shadow 0.4s;
+
+    &:hover {
+      text-shadow: 0 0 10px #58a249;
+    }
   }
 }
