@@ -1,56 +1,63 @@
 import './App.scss';
-import { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Search from './components/search/search.tsx';
 import ResultList from './components/result-list/result-list.tsx';
 import Button from './components/ui/button/button.tsx';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 
-interface State {
-  error: boolean;
-  requestUrl: string;
-}
+function App(): React.ReactNode {
+  const [error, setError] = useState<boolean>(false);
+  const [requestUrl, setRequestUrl] = useState<string>('');
 
-type Props = object;
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-class App extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      error: false,
-      requestUrl: '',
-    };
+  useEffect(() => {
+    if (!searchParams.get('page')) {
+      const { pathname } = location;
+      const params = new URLSearchParams(searchParams);
+      params.set('page', '1');
+      navigate(`${pathname}?${params.toString()}`);
+    }
+  });
+
+  useEffect(() => {
+    if (location.state) setRequestUrl(location.state);
+  }, [location]);
+
+  useEffect(() => {
+    if (error) throw new Error('Test error boundary');
+  }, [error]);
+
+  function throwError() {
+    setError(true);
   }
 
-  throwError = () => {
-    this.setState({ error: true });
-  };
-
-  getRequestUrl = (requestUrl: string) => {
-    this.setState({ requestUrl });
-  };
-
-  render() {
-    if (this.state.error) throw new Error('Test error boundary');
-    return (
-      <>
-        <header className="app-header">
-          <div className="container">
-            <Search getRequestUrl={this.getRequestUrl} />
-            <div className={'error-button'}>
-              <Button title={'Error Test'} handleClick={this.throwError} />
-            </div>
-          </div>
-        </header>
-        <main className="app-main">
-          <div className="container">
-            <ResultList requestUrl={this.state.requestUrl} />
-          </div>
-        </main>
-        <footer className="footer">
-          <div className="container"></div>
-        </footer>
-      </>
-    );
+  function getRequestUrl(url: string) {
+    setRequestUrl(url);
   }
+
+  return (
+    <>
+      <header className="app-header">
+        <div className="container">
+          <Search getRequestUrl={getRequestUrl} />
+          <div className={'error-button'}>
+            <Button title={'Error Test'} handleClick={throwError} />
+          </div>
+        </div>
+      </header>
+      <main className="app-main">
+        <div className="container">
+          <ResultList requestUrl={requestUrl} />
+        </div>
+      </main>
+      <footer className="footer">
+        <div className="container"></div>
+      </footer>
+    </>
+  );
 }
 
 export default App;

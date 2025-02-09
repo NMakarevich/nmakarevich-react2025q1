@@ -1,14 +1,21 @@
 .button {
   padding: 5px;
   text-align: center;
-  background-color: #49454f;
-  border: 1px solid #00a8c9;
+  background-color: #49454F;
+  border: 1px solid #00A8C9;
   border-radius: 5px;
-  color: #00a8c9;
+  color: #00A8C9;
   cursor: pointer;
-  transition: background-color 0.4s;
+  transition: box-shadow 0.2s;
 
   &:hover {
-    box-shadow: 0 0 4px 0 #58a249;
+    box-shadow: 0 0 6px 0 #58A249;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: #CAC4D0;
+    opacity: 0.9;
+    box-shadow: none;
   }
 }

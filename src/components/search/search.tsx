@@ -1,85 +1,73 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
-import Select from '../ui/select/select.tsx';
 import './search.scss';
+import SelectResource from '../selectResource/selectResource.tsx';
+import useLocalStorage from '../../hooks/local-storage.tsx';
+import { useNavigate, useParams } from 'react-router';
 
-interface State {
-  search: string;
-  resources: Resource;
-  selectedResource: string;
-}
-
-export interface Resource {
-  [resource: string]: string;
+export interface SelectedResource {
+  name: string;
+  url: string;
 }
 
 interface Props {
   getRequestUrl: (requestUrl: string) => void;
 }
 
-class Search extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    const search = localStorage.getItem(LOCAL_STORAGE_KEYS.search) ?? '';
-    const resource = localStorage.getItem(LOCAL_STORAGE_KEYS.resource) ?? '';
-    this.state = {
-      search: search,
-      resources: {},
-      selectedResource: resource,
-    };
+function Search(props: Props): React.ReactNode {
+  const [localStorageSearch, setLocalStorageSearch] = useLocalStorage(
+    LOCAL_STORAGE_KEYS.search
+  );
+  const [localStorageResource, setLocalStorageResource] = useLocalStorage(
+    LOCAL_STORAGE_KEYS.resource
+  );
+  const { resource } = useParams();
+  const [search, setSearch] = useState<string>(localStorageSearch);
+  const [selectedResource, setSelectedResource] = useState<SelectedResource>({
+    name: resource || localStorageResource,
+    url: '',
+  });
+  const navigate = useNavigate();
+
+  const { getRequestUrl } = props;
+
+  function handleButtonClick() {
+    setLocalStorageSearch(search);
+    setLocalStorageResource(selectedResource.name);
+    getRequestUrl(`${selectedResource.url}${search ? `?name=${search}` : ''}`);
+    if (resource !== selectedResource.name) {
+      navigate(`/search/${selectedResource.name}`);
+    }
   }
 
-  handleButtonClick = () => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.search, this.state.search);
-    localStorage.setItem(
-      LOCAL_STORAGE_KEYS.resource,
-      this.state.selectedResource
-    );
-    const url = this.state.resources[this.state.selectedResource];
-    this.props.getRequestUrl(`${url}/?name=${this.state.search}`);
-  };
+  function selectResource(res: SelectedResource) {
+    if (!selectedResource.url) {
+      getRequestUrl(`${res.url}${search ? `?name=${search}` : ''}`);
+    }
+    setSelectedResource(res);
+  }
 
-  selectResource = (resource: string) => {
-    this.setState({ selectedResource: resource });
-  };
+  function getInputValue(value: string) {
+    setSearch(value);
+  }
 
-  getInputValue = (value: string) => {
-    this.setState({ search: value });
-  };
-
-  getResources = (resources: Resource) => {
-    let url = '';
-    if (!this.state.selectedResource) {
-      const selectedResource = Object.keys(resources)[0];
-      this.setState({ selectedResource });
-      url = resources[selectedResource];
-    } else url = resources[this.state.selectedResource];
-    this.setState({ resources });
-    this.props.getRequestUrl(url);
-  };
-
-  render() {
-    return (
-      <>
-        <Select
-          getResources={this.getResources}
-          handleSelected={this.selectResource}
+  return (
+    <>
+      <SelectResource handleSelected={selectResource} />
+      <div className={'search'}>
+        <Input
+          name={'search'}
+          id={'search'}
+          type={'text'}
+          search={search}
+          searchValue={getInputValue}
         />
-        <div className={'search'}>
-          <Input
-            name={'search'}
-            id={'search'}
-            type={'text'}
-            search={this.state.search}
-            searchValue={this.getInputValue}
-          />
-          <Button title="Search" handleClick={this.handleButtonClick} />
-        </div>
-      </>
-    );
-  }
+        <Button title="Search" handleClick={handleButtonClick} />
+      </div>
+    </>
+  );
 }
 
 export default Search;

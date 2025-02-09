@@ -41,11 +41,18 @@ export interface Episode {
 
 export interface Response {
   results: Character[] | Location[] | Episode[];
-  info: {
-    count: number;
-    pages: number;
-    next: string | null;
-    prev: string | null;
-  };
+  info: ResponseInfo;
   error?: string;
+}
+
+export interface ResponseDetailed {
+  data: Character | Location | Episode | null;
+  error?: string;
+}
+
+export interface ResponseInfo {
+  count: number;
+  pages: number;
+  next: string | null;
+  prev: string | null;
 }

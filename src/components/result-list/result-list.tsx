@@ -1,90 +1,98 @@
-import { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import ResultItem from '../result-item/result-item.tsx';
 import './result-list.scss';
-import { Character, Response } from '../../interfaces.ts';
+import { Response } from '../../interfaces.ts';
 import ResponseError from '../response-error/response-error.tsx';
 import Loading from '../ui/loading/loading.tsx';
-
-interface State {
-  response: Response;
-  status: number;
-  isLoading: boolean;
-}
+import Pagination from '../pagination/pagination.tsx';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router';
 
 interface Props {
   requestUrl: string;
 }
 
-class ResultList extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      response: {
-        results: [],
-        info: {
-          count: 0,
-          pages: 0,
-          next: null,
-          prev: null,
-        },
-        error: '',
-      },
-      status: 0,
-      isLoading: false,
-    };
+function ResultList(props: Props): React.ReactNode {
+  const [response, setResponse] = useState<Response>({
+    results: [],
+    info: {
+      count: 0,
+      pages: 0,
+      next: null,
+      prev: null,
+    },
+    error: '',
+  });
+  const [status, setStatus] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { requestUrl } = props;
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { resource, id } = useParams();
+
+  function closeDetails() {
+    if (id && location.pathname.includes(id))
+      navigate(`/search/${resource}?${searchParams.toString()}`);
   }
 
-  async componentDidUpdate(prevProps: Readonly<Props>) {
-    if (prevProps.requestUrl !== this.props.requestUrl) {
-      await this.loadData();
+  useEffect(() => {
+    async function loadData() {
+      if (!requestUrl) return;
+      setIsLoading(true);
+      const page = searchParams.get('page');
+      const params = new URLSearchParams(requestUrl.split('?')[1]);
+      if (!params.has('page') && page) params.set('page', page);
+      const resp = await fetch(
+        `${requestUrl.split('?')[0]}?${params.toString()}`
+      );
+      const status = resp.status;
+      const data: Response = await resp.json();
+      setResponse(data);
+      setStatus(status);
+      setIsLoading(false);
     }
-  }
+    loadData().then(() => {});
+  }, [requestUrl, searchParams]);
 
-  loadData = async () => {
-    this.setState({ isLoading: true });
-    const resp = await fetch(this.props.requestUrl);
-    const status = resp.status;
-    const data: Response = await resp.json();
-    if (!data.error && 'image' in data.results[0] && data.results[0].image) {
-      const images = data.results.map((item) => (item as Character).image);
-      const promises = images.map((image) => {
-        return new Promise<HTMLImageElement>((resolve, reject) => {
-          const img = new Image();
-          img.src = image;
-          img.alt = image;
-          img.onload = () => resolve(img);
-          img.onerror = () => reject();
-        });
-      });
-      await Promise.all(promises);
-    }
-    this.setState({ response: data, status, isLoading: false });
-  };
-
-  render() {
-    const { results } = this.state.response;
-    const { status, isLoading } = this.state;
-    return (
-      <>
-        {isLoading && <Loading />}
-        {status > 400 && (
-          <ResponseError
-            status={status}
-            message={this.state.response.error || ''}
-          />
-        )}
-        {results && results.length > 0 && (
+  return (
+    <>
+      {isLoading && <Loading />}
+      {response.results && response.results.length > 0 ? (
+        <>
           <div className={'result'}>
-            <div className={'result-list'}>
-              {results.map((result) => (
-                <ResultItem key={result.id} result={result} />
-              ))}
+            <Pagination info={response.info} />
+            <div className={'result-wrapper'}>
+              <div className={'result-list'} onClick={closeDetails}>
+                {response.results.map((result) => (
+                  <Link
+                    to={`/search/${resource}/${result.id}?${searchParams.toString()}`}
+                    key={result.id}
+                    state={requestUrl}
+                  >
+                    <ResultItem result={result} />
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        )}
-      </>
-    );
-  }
+          <Outlet />
+        </>
+      ) : (
+        response.error && (
+          <ResponseError status={status} message={response.error || ''} />
+        )
+      )}
+    </>
+  );
 }
 
 export default ResultList;

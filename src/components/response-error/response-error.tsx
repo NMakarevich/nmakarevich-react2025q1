@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import './response-error.scss';
 
 interface Props {
@@ -6,18 +6,15 @@ interface Props {
   message: string;
 }
 
-type State = object;
+function ResponseError(props: Props): React.ReactNode {
+  const { status, message } = props;
 
-class ResponseError extends Component<Props, State> {
-  render() {
-    const { status, message } = this.props;
-    return (
-      <div className={'response-error'}>
-        <span className={'response-error_status'}>Status code: {status}</span>
-        <p className={'response-error_message'}>{message}</p>
-      </div>
-    );
-  }
+  return (
+    <div className={'response-error'}>
+      <span className={'response-error_status'}>Status code: {status}</span>
+      <p className={'response-error_message'}>{message}</p>
+    </div>
+  );
 }
 
 export default ResponseError;

@@ -1,12 +1,23 @@
+a {
+  text-decoration: none;
+}
+
 .result-item {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
+  color: #00A8C9;
   background-color: #49454F;
   border: 2px solid #00a8c9;
   box-shadow: 0 0 4px 4px #58a249;
   border-radius: 5px;
   overflow: hidden;
+  transition: box-shadow 0.4s;
+
+  &:hover {
+    box-shadow: 0 0 6px 6px #58a249;
+  }
 
   &_info {
     &-list {

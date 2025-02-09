@@ -1,27 +1,29 @@
-import { Component } from 'react';
+import React from 'react';
 import './button.scss';
 
 interface Props {
   title: string;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
   handleClick: () => void;
 }
 
-type State = object;
+function Button(props: Props): React.ReactNode {
+  const { title, handleClick, disabled } = props;
+  const type = props.type ?? 'button';
 
-class Button extends Component<Props, State> {
-  render() {
-    return (
-      <>
-        <button
-          className={'button'}
-          type="button"
-          onClick={this.props.handleClick}
-        >
-          {this.props.title}
-        </button>
-      </>
-    );
-  }
+  return (
+    <>
+      <button
+        className={'button'}
+        type={type}
+        onClick={handleClick}
+        disabled={disabled}
+      >
+        {title}
+      </button>
+    </>
+  );
 }
 
 export default Button;

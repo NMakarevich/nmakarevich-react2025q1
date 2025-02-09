@@ -1,0 +1,27 @@
+.detailed {
+  position: relative;
+  display: flex;
+  max-width: 300px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+
+  &-item {
+    img {
+      width: 100%;
+    }
+  }
+
+  &-close {
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: text-shadow 0.4s;
+
+    &:hover {
+      text-shadow: 0 0 10px #58a249;
+    }
+  }
+}
