@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-function useLocalStorage(key: string) {
+function useLocalStorage(key: string, defaultValue: string = '') {
   const [localStorageValue, setLocalStorageValue] =
     useState(getFromLocalStorage);
 
-  function getFromLocalStorage(): string {
-    const ls = localStorage.getItem(key);
-    return ls ?? '';
+  function getFromLocalStorage() {
+    const ls = localStorage.getItem(key) || defaultValue;
+    return ls || defaultValue;
   }
 
   function saveToLocalStorage(value: string) {
