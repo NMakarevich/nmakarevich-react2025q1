@@ -1,11 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
 import ErrorBoundary from './error-boundary.tsx';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import DetailedItem from './components/detailed-item/detailed-item.tsx';
 import NotFoundPage from './pages/NotFound/not-found.tsx';
+import Main from './pages/Main/main.tsx';
 
 const root = document.getElementById('root');
 
@@ -16,8 +16,8 @@ if (root)
         <BrowserRouter>
           <Routes>
             <Route path={'/'} element={<Navigate to={'search'} />} />
-            <Route path={'/search'} element={<App />} />
-            <Route path={'/search/:resource'} element={<App />}>
+            <Route path={'/search'} element={<Main />} />
+            <Route path={'/search/:resource'} element={<Main />}>
               <Route index path={':id'} element={<DetailedItem />} />
             </Route>
             <Route path={'*'} element={<NotFoundPage />} />
