@@ -1,7 +1,10 @@
+@use "styles/theme";
+
 #root {
   display: flex;
   flex-direction: column;
   height: 100%;
+
 }
 
 .container {
@@ -16,8 +19,13 @@
 .app-header {
   display: flex;
   justify-content: center;
-  background-color: #2B2930;
-  box-shadow: 0 0 5px 5px rgba(88, 162, 73, 0.5);
+  background-color: theme.$header-background;
+  box-shadow: 0 0 5px 5px theme.$header-box-shadow;
+
+  &.light {
+    background-color: theme.$header-background-light;
+    box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
+  }
 
   & .container {
     flex-direction: row;
@@ -38,7 +46,7 @@
   }
 }
 
-.error-button {
+.toggle {
   margin-left: auto;
 }
 
@@ -49,7 +57,7 @@
 
   .app-header .container {
     .select,
-    .error-button{
+    .toggle{
       margin-right: unset;
       margin-left: unset;
     }

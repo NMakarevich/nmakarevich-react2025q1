@@ -26,3 +26,8 @@ body {
   background-color: #141218;
   color: #00a8c9;
 }
+
+body:has(.app-header.light) {
+  background-color: #FEF7FF;
+  color: #202329;
+}

@@ -1,3 +1,5 @@
+@use "../../styles/theme";
+
 a {
   text-decoration: none;
 }
@@ -7,8 +9,8 @@ a {
   flex-direction: column;
   gap: 10px;
   height: 100%;
-  color: #00A8C9;
-  background-color: #49454F;
+  color: theme.$color;
+  background-color: theme.$inputs-background;
   border: 2px solid #00a8c9;
   box-shadow: 0 0 4px 4px #58a249;
   border-radius: 5px;
@@ -39,3 +41,9 @@ a {
   }
 }
 
+.light {
+  .result-item {
+    background-color: theme.$background-light;
+    color: theme.$color-light
+  }
+}

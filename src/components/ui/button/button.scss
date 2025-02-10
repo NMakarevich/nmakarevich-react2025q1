@@ -1,10 +1,12 @@
+@use "../../../styles/theme";
+
 .button {
   padding: 5px;
   text-align: center;
-  background-color: #49454F;
+  background-color: theme.$inputs-background;
   border: 1px solid #00A8C9;
   border-radius: 5px;
-  color: #00A8C9;
+  color: theme.$color;
   cursor: pointer;
   transition: box-shadow 0.2s;
 
@@ -17,5 +19,12 @@
     color: #CAC4D0;
     opacity: 0.9;
     box-shadow: none;
+  }
+}
+
+.light {
+  .button {
+    background-color: theme.$background-light;
+    color: theme.$color-light;
   }
 }

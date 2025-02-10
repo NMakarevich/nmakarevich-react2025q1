@@ -1,3 +1,5 @@
+@use "../../../styles/theme";
+
 .select {
   display: flex;
   align-items: center;
@@ -15,9 +17,9 @@
     display: flex;
     align-items: center;
     padding: 5px 20px 5px 5px;
-    background-color: #49454f;
+    background-color: theme.$inputs-background;
     border: 1px solid #00a8c9;
-    color: #00a8c9;
+    color: theme.$color;
     border-radius: 5px;
     cursor: pointer;
     transition: border-color 0.4s;
@@ -63,8 +65,8 @@
     justify-content: center;
     align-items: center;
     padding: 5px;
-    background-color: #49454f;
-    color: #00a8c9;
+    background-color: theme.$inputs-background;
+    color: theme.$color;
     border: 1px solid #00a8c9;
     cursor: pointer;
 
@@ -77,7 +79,7 @@
     }
 
     &:hover {
-      background-color: #322F35;
+      background-color: theme.$background-hover;
     }
   }
 
@@ -88,5 +90,18 @@
     right: 0;
     bottom: 0;
     z-index: 25;
+  }
+}
+
+.light {
+  .select {
+    &-value,
+    &-option {
+      background-color: theme.$background-light;
+      color: theme.$color-light;
+    }
+    &-option:hover {
+      background-color: theme.$background-light-hover;
+    }
   }
 }

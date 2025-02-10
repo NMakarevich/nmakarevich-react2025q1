@@ -1,3 +1,5 @@
+@use "../../../styles/theme";
+
 .toggle {
   display: flex;
   align-items: center;
@@ -16,7 +18,7 @@
     align-items: center;
     width: 40px;
     height: 20px;
-    background-color: #49454F;
+    background-color: theme.$inputs-background;
     border-radius: 10px;
 
     &:before {
@@ -38,6 +40,14 @@
     &.selected:before {
       transform: translateX(22px);
       background-color: #58a249;
+    }
+  }
+}
+
+.light {
+  .toggle {
+    &-indicator {
+      background-color: theme.$background-light;
     }
   }
 }

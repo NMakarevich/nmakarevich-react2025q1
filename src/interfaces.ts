@@ -56,3 +56,8 @@ export interface ResponseInfo {
   next: string | null;
   prev: string | null;
 }
+
+export interface IThemeContext {
+  isSwitched: boolean;
+  setIsSwitched: (isSwitched: boolean) => void;
+}
