@@ -48,9 +48,6 @@ function App(): React.ReactNode {
           <ResultList requestUrl={requestUrl} />
         </div>
       </main>
-      <footer className="footer">
-        <div className="container"></div>
-      </footer>
     </>
   );
 }
