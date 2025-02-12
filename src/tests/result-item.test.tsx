@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import ResultList from '../components/result-list/result-list.tsx';
+import { Provider } from 'react-redux';
+import { store } from '../redux/store.ts';
 
 const requestUrl = 'https://rickandmortyapi.com/api/character/';
 
@@ -24,7 +26,9 @@ describe('ResultItem', () => {
     const item = response.results[0];
     render(
       <BrowserRouter>
-        <ResultItem result={item} />
+        <Provider store={store}>
+          <ResultItem result={item} />
+        </Provider>
       </BrowserRouter>
     );
     const name = 'Rick Sanchez';
@@ -35,7 +39,9 @@ describe('ResultItem', () => {
     const initialPath = window.location.pathname;
     render(
       <BrowserRouter>
-        <ResultList requestUrl={requestUrl} />
+        <Provider store={store}>
+          <ResultList requestUrl={requestUrl} />
+        </Provider>
       </BrowserRouter>
     );
     const cards = await screen.findAllByText('Name:');

@@ -5,6 +5,8 @@ import { response, location, episode } from './mock.ts';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { BrowserRouter } from 'react-router';
+import { Provider } from 'react-redux';
+import { store } from '../redux/store.ts';
 
 const requestUrl = 'https://rickandmortyapi.com/api/character/';
 
@@ -22,7 +24,9 @@ describe('Result list', () => {
   it('Should show loader', () => {
     render(
       <BrowserRouter>
-        <ResultList requestUrl={requestUrl} />
+        <Provider store={store}>
+          <ResultList requestUrl={requestUrl} />
+        </Provider>
       </BrowserRouter>
     );
     const loader = screen.getByText('Loading...');
@@ -31,7 +35,9 @@ describe('Result list', () => {
   it('Result list render correctly', async () => {
     render(
       <BrowserRouter>
-        <ResultList requestUrl={requestUrl} />
+        <Provider store={store}>
+          <ResultList requestUrl={requestUrl} />
+        </Provider>
       </BrowserRouter>
     );
     const cards = await screen.findAllByText('Name:');
@@ -48,7 +54,9 @@ describe('Result list', () => {
     );
     render(
       <BrowserRouter>
-        <ResultList requestUrl={requestUrl} />
+        <Provider store={store}>
+          <ResultList requestUrl={requestUrl} />
+        </Provider>
       </BrowserRouter>
     );
     const result = await screen.findByText('There is nothing here');
@@ -62,7 +70,9 @@ describe('Result list', () => {
     );
     render(
       <BrowserRouter>
-        <ResultList requestUrl={requestUrl} />
+        <Provider store={store}>
+          <ResultList requestUrl={requestUrl} />
+        </Provider>
       </BrowserRouter>
     );
     const cards = await screen.findAllByText('Dimension:');
@@ -76,7 +86,9 @@ describe('Result list', () => {
     );
     render(
       <BrowserRouter>
-        <ResultList requestUrl={requestUrl} />
+        <Provider store={store}>
+          <ResultList requestUrl={requestUrl} />
+        </Provider>
       </BrowserRouter>
     );
     const cards = await screen.findAllByText('Episode:');

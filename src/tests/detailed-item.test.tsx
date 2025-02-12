@@ -6,6 +6,8 @@ import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { episode, location, response } from './mock.ts';
 import '@testing-library/jest-dom';
+import { Provider } from 'react-redux';
+import { store } from '../redux/store.ts';
 
 const requestUrl = 'https://rickandmortyapi.com/api/character/1';
 
@@ -34,7 +36,9 @@ describe('Detailed Item', () => {
   it('Should display loader', () => {
     render(
       <BrowserRouter>
-        <DetailedItem />
+        <Provider store={store}>
+          <DetailedItem />
+        </Provider>
       </BrowserRouter>
     );
     const loader = screen.getByText('Loading...');
@@ -43,7 +47,9 @@ describe('Detailed Item', () => {
   it('Should display detailed item', async () => {
     render(
       <BrowserRouter>
-        <DetailedItem />
+        <Provider store={store}>
+          <DetailedItem />
+        </Provider>
       </BrowserRouter>
     );
     const card = await screen.findByText('Name:');
@@ -52,7 +58,9 @@ describe('Detailed Item', () => {
   it('Should close detailed item', async () => {
     render(
       <BrowserRouter>
-        <DetailedItem />
+        <Provider store={store}>
+          <DetailedItem />
+        </Provider>
       </BrowserRouter>
     );
     const button = await screen.findByText('Close');
@@ -67,7 +75,9 @@ describe('Detailed Item', () => {
     );
     render(
       <BrowserRouter>
-        <DetailedItem />
+        <Provider store={store}>
+          <DetailedItem />
+        </Provider>
       </BrowserRouter>
     );
     const dimension = await screen.findByText(location.results[0].dimension);
@@ -81,7 +91,9 @@ describe('Detailed Item', () => {
     );
     render(
       <BrowserRouter>
-        <DetailedItem />
+        <Provider store={store}>
+          <DetailedItem />
+        </Provider>
       </BrowserRouter>
     );
     const air_date = await screen.findByText(episode.results[0].air_date);
