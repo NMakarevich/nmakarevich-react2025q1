@@ -75,7 +75,7 @@ function ResultList(props: Props): React.ReactNode {
                 {response.results.map((result) => (
                   <Link
                     to={`/search/${resource}/${result.id}?${searchParams.toString()}`}
-                    key={result.id}
+                    key={`${resource}-${result.id}`}
                     state={requestUrl}
                   >
                     <ResultItem result={result} />
