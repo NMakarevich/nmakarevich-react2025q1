@@ -1,0 +1,29 @@
+@use "../../styles/theme";
+
+.flyout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+
+  &.hidden {
+    display: none;
+  }
+
+  &-controls {
+    display: flex;
+    gap: 20px;
+
+    &_download {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px;
+      border: 1px solid theme.$color;
+      border-radius: 5px;
+      color: theme.$color;
+      cursor: pointer;
+    }
+  }
+}

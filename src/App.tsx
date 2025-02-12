@@ -12,6 +12,7 @@ import Toggle from './components/ui/toggle/toggle.tsx';
 import { ThemeContext } from './providers/theme/theme.context.tsx';
 import { useAppDispatch } from './redux/store.ts';
 import { setResource } from './redux/favourites.slice.ts';
+import Flyout from './components/flyout/flyout.tsx';
 
 function App(): React.ReactNode {
   const [requestUrl, setRequestUrl] = useState<string>('');
@@ -61,6 +62,7 @@ function App(): React.ReactNode {
           <ResultList requestUrl={requestUrl} />
         </div>
       </main>
+      <Flyout />
     </>
   );
 }

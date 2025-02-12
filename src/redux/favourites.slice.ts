@@ -42,7 +42,7 @@ export const favouritesSlice = createSlice({
 });
 
 const selectFavouritesState = (state: RootState) => state.favourites;
-const selectFavourites = createSelector(
+export const selectFavourites = createSelector(
   selectFavouritesState,
   (state) => state.favourites
 );
