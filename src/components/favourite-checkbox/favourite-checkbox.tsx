@@ -7,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
 import { useParams } from 'react-router';
 import { Character, Episode, Location } from '../../interfaces.ts';
+import './favourite-checkbox.scss';
 
 function FavouriteCheckbox(props: {
   result: Character | Location | Episode;
