@@ -4,6 +4,7 @@ import './result-item.scss';
 import ResultItemCharacter from './result-item-character.tsx';
 import ResultItemLocation from './result-item-location.tsx';
 import ResultItemEpisode from './result-item-episode.tsx';
+import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
 
 interface Props {
   result: Character | Location | Episode;
@@ -12,12 +13,21 @@ interface Props {
 function ResultItem(props: Props): React.ReactNode {
   const { result } = props;
 
-  if ('image' in result && result.image)
-    return <ResultItemCharacter result={result} />;
-  if ('dimension' in result && result.dimension)
-    return <ResultItemLocation result={result} />;
-  if ('air_date' in result && result.air_date)
-    return <ResultItemEpisode result={result} />;
+  function selectCard() {
+    if ('image' in result && result.image)
+      return <ResultItemCharacter result={result} />;
+    if ('dimension' in result && result.dimension)
+      return <ResultItemLocation result={result} />;
+    if ('air_date' in result && result.air_date)
+      return <ResultItemEpisode result={result} />;
+  }
+
+  return (
+    <div className={'result-item'}>
+      {selectCard()}
+      <FavouriteCheckbox result={result} />{' '}
+    </div>
+  );
 }
 
 export default ResultItem;

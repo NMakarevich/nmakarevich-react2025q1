@@ -8,6 +8,7 @@ import { ResponseDetailed } from '../../interfaces.ts';
 import DetailedItemCharacter from './detailed-item-character.tsx';
 import DetailedItemLocation from './detailed-item-location.tsx';
 import DetailedItemEpisode from './detailed-item-episode.tsx';
+import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
 
 function DetailedItem(): React.ReactNode {
   const [response, setResponse] = useState<ResponseDetailed>({
@@ -50,23 +51,26 @@ function DetailedItem(): React.ReactNode {
             Close
           </div>
           {response.data && 'image' in response.data && response.data.image && (
-            <>
+            <div className={'detailed-item-content'}>
+              <FavouriteCheckbox result={response.data} />
               <DetailedItemCharacter item={response.data} />
-            </>
+            </div>
           )}
           {response.data &&
             'dimension' in response.data &&
             response.data.dimension && (
-              <>
+              <div className={'detailed-item-content'}>
+                <FavouriteCheckbox result={response.data} />
                 <DetailedItemLocation item={response.data} />
-              </>
+              </div>
             )}
           {response.data &&
             'air_date' in response.data &&
             response.data.air_date && (
-              <>
+              <div className={'detailed-item-content'}>
+                <FavouriteCheckbox result={response.data} />
                 <DetailedItemEpisode item={response.data} />
-              </>
+              </div>
             )}
         </div>
       )}

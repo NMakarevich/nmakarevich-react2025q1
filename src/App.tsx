@@ -2,9 +2,16 @@ import './App.scss';
 import React, { useContext, useEffect, useState } from 'react';
 import Search from './components/search/search.tsx';
 import ResultList from './components/result-list/result-list.tsx';
-import { useLocation, useNavigate, useSearchParams } from 'react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router';
 import Toggle from './components/ui/toggle/toggle.tsx';
 import { ThemeContext } from './providers/theme/theme.context.tsx';
+import { useAppDispatch } from './redux/store.ts';
+import { setResource } from './redux/favourites.slice.ts';
 
 function App(): React.ReactNode {
   const [requestUrl, setRequestUrl] = useState<string>('');
@@ -12,6 +19,12 @@ function App(): React.ReactNode {
   const location = useLocation();
   const navigate = useNavigate();
   const { isSwitched, setIsSwitched } = useContext(ThemeContext);
+  const { resource } = useParams();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (resource) dispatch(setResource(resource));
+  }, [dispatch, resource]);
 
   useEffect(() => {
     if (!searchParams.get('page')) {
