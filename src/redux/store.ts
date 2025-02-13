@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import favouritesReducer from './favourites.slice.ts';
+import detailsReducer from './details.slice.ts';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
   reducer: {
     favourites: favouritesReducer,
+    details: detailsReducer,
   },
 });
 

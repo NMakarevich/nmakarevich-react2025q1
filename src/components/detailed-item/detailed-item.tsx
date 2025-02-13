@@ -9,6 +9,8 @@ import DetailedItemCharacter from './detailed-item-character.tsx';
 import DetailedItemLocation from './detailed-item-location.tsx';
 import DetailedItemEpisode from './detailed-item-episode.tsx';
 import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
+import { useAppDispatch } from '../../redux/store.ts';
+import { deleteDetails, saveDetails } from '../../redux/details.slice.ts';
 
 function DetailedItem(): React.ReactNode {
   const [response, setResponse] = useState<ResponseDetailed>({
@@ -17,10 +19,10 @@ function DetailedItem(): React.ReactNode {
   });
   const [status, setStatus] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { resource, id } = useParams();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function loadData() {
@@ -31,15 +33,17 @@ function DetailedItem(): React.ReactNode {
         setResponse(data?.error ? data : { data });
         setStatus(res.status);
         setIsLoading(false);
+        if (data) dispatch(saveDetails(data));
       }
     }
     loadData().then(() => {});
-  }, [id, resource]);
+  }, [dispatch, id, resource]);
 
   function closeDetails() {
     const params = new URLSearchParams(searchParams);
     setResponse({ data: null, error: '' });
     navigate(`/search/${resource}?${params.toString()}`);
+    dispatch(deleteDetails());
   }
 
   return (
