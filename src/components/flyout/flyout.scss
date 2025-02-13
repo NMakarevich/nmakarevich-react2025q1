@@ -1,14 +1,25 @@
 @use "../../styles/theme";
 
+.flyout-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .flyout {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   padding: 10px;
+  background-color: theme.$header-background;
+  transform: translateY(0);
+  transition: transform 0.5s;
+  box-shadow: 0 0 5px 5px theme.$header-box-shadow;
 
   &.hidden {
-    display: none;
+    transform: translateY(300px);
   }
 
   &-controls {
@@ -22,8 +33,25 @@
       padding: 5px;
       border: 1px solid theme.$color;
       border-radius: 5px;
+      background-color: theme.$inputs-background;
       color: theme.$color;
       cursor: pointer;
+      transition: box-shadow 0.2s;
+
+      &:hover {
+        box-shadow: 0 0 6px 0 #58A249;
+      }
+    }
+  }
+}
+
+.light {
+  .flyout {
+    background-color: theme.$header-background-light;
+    box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
+    &-controls_download {
+      background-color: theme.$background-light;
+      color: theme.$color-light;
     }
   }
 }

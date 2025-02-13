@@ -62,7 +62,9 @@ function App(): React.ReactNode {
           <ResultList requestUrl={requestUrl} />
         </div>
       </main>
-      <Flyout />
+      <div className={`flyout-wrapper ${isSwitched ? 'light' : ''}`}>
+        <Flyout />
+      </div>
     </>
   );
 }
