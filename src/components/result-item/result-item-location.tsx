@@ -13,7 +13,8 @@ function ResultItemLocation(props: Props): React.ReactNode {
         <span className={'info-title'}>Name:</span> {result.name}
       </li>
       <li className={'result-item_info-item'}>
-        <span className={'info-title'}>Dimension:</span> {result.dimension}
+        <span className={'info-title'}>Dimension: </span>
+        {result.dimension || 'unknown'}
       </li>
     </ul>
   );

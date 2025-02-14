@@ -16,7 +16,7 @@ function ResultItem(props: Props): React.ReactNode {
   function selectCard() {
     if ('image' in result && result.image)
       return <ResultItemCharacter result={result} />;
-    if ('dimension' in result && result.dimension)
+    if ('residents' in result && result.residents)
       return <ResultItemLocation result={result} />;
     if ('air_date' in result && result.air_date)
       return <ResultItemEpisode result={result} />;

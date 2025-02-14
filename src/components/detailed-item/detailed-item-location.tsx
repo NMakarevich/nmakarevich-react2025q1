@@ -18,7 +18,8 @@ function DetailedItemLocation(props: Props): React.ReactNode {
           <span className={'info-title'}>Type:</span> {item.type || 'unknown'}
         </li>
         <li className={'result-item_info-item'}>
-          <span className={'info-title'}>Dimension:</span> {item.dimension}
+          <span className={'info-title'}>Dimension: </span>
+          {item.dimension || 'unknown'}
         </li>
         <li className={'result-item_info-item'}>
           <span className={'info-title'}>Residents:</span>{' '}

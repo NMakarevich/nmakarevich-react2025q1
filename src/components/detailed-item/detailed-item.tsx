@@ -61,8 +61,8 @@ function DetailedItem(): React.ReactNode {
             </div>
           )}
           {response.data &&
-            'dimension' in response.data &&
-            response.data.dimension && (
+            'residents' in response.data &&
+            response.data.residents && (
               <div className={'detailed-item-content'}>
                 <FavouriteCheckbox result={response.data} />
                 <DetailedItemLocation item={response.data} />
