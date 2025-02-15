@@ -10,8 +10,7 @@ import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
 import { useAppDispatch } from '../../redux/store.ts';
 import { deleteDetails, saveDetails } from '../../redux/details.slice.ts';
 import { useGetCardQuery } from '../../redux/api.ts';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { SerializedError } from '@reduxjs/toolkit';
+import { parseError } from '../../utils.ts';
 
 function DetailedItem(): React.ReactNode {
   const [searchParams] = useSearchParams();
@@ -33,19 +32,6 @@ function DetailedItem(): React.ReactNode {
     const params = new URLSearchParams(searchParams);
     navigate(`/search/${resource}?${params.toString()}`);
     dispatch(deleteDetails());
-  }
-
-  function parsedError(
-    error: FetchBaseQueryError | SerializedError | undefined
-  ) {
-    if (error && 'status' in error && error.status) {
-      const { status, data } = error as {
-        status: number;
-        data: { error: string };
-      };
-      return { status, data };
-    }
-    return null;
   }
 
   return (
@@ -78,8 +64,8 @@ function DetailedItem(): React.ReactNode {
       )}
       {error && (
         <ResponseError
-          status={parsedError(error)?.status || 0}
-          message={parsedError(error)?.data.error || 'Unknown error'}
+          status={parseError(error)?.status || 0}
+          message={parseError(error)?.data.error || 'Unknown error'}
         />
       )}
     </div>

@@ -60,3 +60,10 @@ export interface IThemeContext {
 }
 
 export type Resources = { [key: string]: string };
+
+export interface ResponseError {
+  status: number;
+  data: {
+    error: string;
+  };
+}

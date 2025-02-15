@@ -13,10 +13,9 @@ import {
   useSearchParams,
 } from 'react-router';
 import { useGetCardsQuery } from '../../redux/api.ts';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { SerializedError } from '@reduxjs/toolkit';
 import { useAppSelector } from '../../redux/store.ts';
 import { selectRequestUrl } from '../../redux/resources.slice.ts';
+import { parseError } from '../../utils.ts';
 
 function ResultList(): React.ReactNode {
   const [searchParams] = useSearchParams();
@@ -32,19 +31,6 @@ function ResultList(): React.ReactNode {
   function closeDetails() {
     if (id && location.pathname.includes(id))
       navigate(`/search/${resource}?${searchParams.toString()}`);
-  }
-
-  function parsedError(
-    error: FetchBaseQueryError | SerializedError | undefined
-  ) {
-    if (error && 'status' in error && error.status) {
-      const { status, data } = error as {
-        status: number;
-        data: { error: string };
-      };
-      return { status, data };
-    }
-    return null;
   }
 
   return (
@@ -73,8 +59,8 @@ function ResultList(): React.ReactNode {
       ) : (
         error && (
           <ResponseError
-            status={parsedError(error)?.status || 0}
-            message={parsedError(error)?.data.error || 'Unknown error'}
+            status={parseError(error)?.status || 0}
+            message={parseError(error)?.data.error || 'Unknown error'}
           />
         )
       )}
