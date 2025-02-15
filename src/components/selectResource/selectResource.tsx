@@ -42,13 +42,11 @@ function SelectResource(): React.ReactNode {
   }
 
   return (
-    data && (
-      <Select
-        options={Object.keys(data)}
-        defaultValue={selectedResource || Object.keys(data)[0]}
-        handleSelected={handleSelect}
-      />
-    )
+    <Select
+      options={Object.keys(data ? data : {})}
+      defaultValue={selectedResource || Object.keys(data ? data : {})[0]}
+      handleSelected={handleSelect}
+    />
   );
 }
 
