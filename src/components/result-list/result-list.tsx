@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ResultItem from '../result-item/result-item.tsx';
 import './result-list.scss';
-import { Response } from '../../interfaces.ts';
 import ResponseError from '../response-error/response-error.tsx';
 import Loading from '../ui/loading/loading.tsx';
 import Pagination from '../pagination/pagination.tsx';
@@ -13,66 +12,51 @@ import {
   useParams,
   useSearchParams,
 } from 'react-router';
+import { useGetCardsQuery } from '../../redux/api.ts';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { SerializedError } from '@reduxjs/toolkit';
+import { useAppSelector } from '../../redux/store.ts';
+import { selectRequestUrl } from '../../redux/resources.slice.ts';
 
-interface Props {
-  requestUrl: string;
-}
-
-function ResultList(props: Props): React.ReactNode {
-  const [response, setResponse] = useState<Response>({
-    results: [],
-    info: {
-      count: 0,
-      pages: 0,
-      next: null,
-      prev: null,
-    },
-    error: '',
-  });
-  const [status, setStatus] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { requestUrl } = props;
-
+function ResultList(): React.ReactNode {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { resource, id } = useParams();
+  const requestUrl = useAppSelector(selectRequestUrl);
+
+  const { isFetching, data, error } = useGetCardsQuery(requestUrl, {
+    skip: !requestUrl,
+  });
 
   function closeDetails() {
     if (id && location.pathname.includes(id))
       navigate(`/search/${resource}?${searchParams.toString()}`);
   }
 
-  useEffect(() => {
-    async function loadData() {
-      if (!requestUrl) return;
-      setIsLoading(true);
-      const page = searchParams.get('page');
-      const params = new URLSearchParams(requestUrl.split('?')[1]);
-      if (!params.has('page') && page) params.set('page', page);
-      const resp = await fetch(
-        `${requestUrl.split('?')[0]}?${params.toString()}`
-      );
-      const status = resp.status;
-      const data: Response = await resp.json();
-      setResponse(data);
-      setStatus(status);
-      setIsLoading(false);
+  function parsedError(
+    error: FetchBaseQueryError | SerializedError | undefined
+  ) {
+    if (error && 'status' in error && error.status) {
+      const { status, data } = error as {
+        status: number;
+        data: { error: string };
+      };
+      return { status, data };
     }
-    loadData().then(() => {});
-  }, [requestUrl, searchParams]);
+    return null;
+  }
 
   return (
     <>
-      {isLoading && <Loading />}
-      {response.results && response.results.length > 0 ? (
+      {isFetching && <Loading />}
+      {!error && data && data.results && data.results.length > 0 ? (
         <>
           <div className={'result'}>
-            <Pagination info={response.info} />
+            <Pagination info={data.info} />
             <div className={'result-wrapper'}>
               <div className={'result-list'} onClick={closeDetails}>
-                {response.results.map((result) => (
+                {data.results.map((result) => (
                   <Link
                     to={`/search/${resource}/${result.id}?${searchParams.toString()}`}
                     key={`${resource}-${result.id}`}
@@ -87,8 +71,11 @@ function ResultList(props: Props): React.ReactNode {
           <Outlet />
         </>
       ) : (
-        response.error && (
-          <ResponseError status={status} message={response.error || ''} />
+        error && (
+          <ResponseError
+            status={parsedError(error)?.status || 0}
+            message={parsedError(error)?.data.error || 'Unknown error'}
+          />
         )
       )}
     </>

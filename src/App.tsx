@@ -1,5 +1,5 @@
 import './App.scss';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Search from './components/search/search.tsx';
 import ResultList from './components/result-list/result-list.tsx';
 import {
@@ -15,11 +15,10 @@ import { setResource } from './redux/favourites.slice.ts';
 import Flyout from './components/flyout/flyout.tsx';
 
 function App(): React.ReactNode {
-  const [requestUrl, setRequestUrl] = useState<string>('');
+  const { isSwitched, setIsSwitched } = useContext(ThemeContext);
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isSwitched, setIsSwitched } = useContext(ThemeContext);
   const { resource } = useParams();
   const dispatch = useAppDispatch();
 
@@ -36,19 +35,11 @@ function App(): React.ReactNode {
     }
   });
 
-  useEffect(() => {
-    if (location.state) setRequestUrl(location.state);
-  }, [location]);
-
-  function getRequestUrl(url: string) {
-    setRequestUrl(url);
-  }
-
   return (
     <>
       <header className={`app-header ${isSwitched ? 'light' : ''}`}>
         <div className="container">
-          <Search getRequestUrl={getRequestUrl} />
+          <Search />
           <Toggle
             option1={'Dark'}
             option2={'Light'}
@@ -59,7 +50,7 @@ function App(): React.ReactNode {
       </header>
       <main className={`app-main  ${isSwitched ? 'light' : ''}`}>
         <div className="container">
-          <ResultList requestUrl={requestUrl} />
+          <ResultList />
         </div>
       </main>
       <div className={`flyout-wrapper ${isSwitched ? 'light' : ''}`}>

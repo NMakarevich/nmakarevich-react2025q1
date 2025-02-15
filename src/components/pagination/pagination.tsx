@@ -3,6 +3,8 @@ import { ResponseInfo } from '../../interfaces.ts';
 import Button from '../ui/button/button.tsx';
 import './pagination.scss';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { useAppDispatch } from '../../redux/store.ts';
+import { setRequestUrl } from '../../redux/resources.slice.ts';
 
 interface Props {
   info: ResponseInfo;
@@ -11,12 +13,12 @@ interface Props {
 function Pagination(props: Props): React.ReactNode {
   const { pages, prev, next } = props.info;
   const [searchParams] = useSearchParams();
-
-  const currentPage = searchParams.get('page') || '1';
-
-  const [page, setPage] = useState(parseInt(currentPage, 10));
+  const [page, setPage] = useState(
+    parseInt(searchParams.get('page') || '1', 10)
+  );
   const navigate = useNavigate();
   const { resource } = useParams();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const urlPage = searchParams.get('page') || '1';
@@ -28,7 +30,8 @@ function Pagination(props: Props): React.ReactNode {
     if (prev) {
       params.set('page', (page - 1).toString());
       setPage((prev) => prev - 1);
-      navigate(`/search/${resource}?${params.toString()}`, { state: prev });
+      dispatch(setRequestUrl(prev));
+      navigate(`/search/${resource}?${params.toString()}`);
     }
   }
 
@@ -37,7 +40,8 @@ function Pagination(props: Props): React.ReactNode {
     if (next) {
       params.set('page', (page + 1).toString());
       setPage((prev) => prev + 1);
-      navigate(`/search/${resource}?${params.toString()}`, { state: next });
+      dispatch(setRequestUrl(next));
+      navigate(`/search/${resource}?${params.toString()}`);
     }
   }
 

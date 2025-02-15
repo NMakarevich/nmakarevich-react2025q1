@@ -1,66 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { API_URL, LOCAL_STORAGE_KEYS } from '../../constants.ts';
+import React, { useEffect } from 'react';
 import Select from '../ui/select/select.tsx';
-import { SelectedResource } from '../search/search.tsx';
-import useLocalStorage from '../../hooks/local-storage.tsx';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { useGetResourcesQuery } from '../../redux/api.ts';
+import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
+import { selectResource, setResource } from '../../redux/resources.slice.ts';
 
 export interface Resource {
   [resource: string]: string;
 }
 
-interface Props {
-  handleSelected: (resource: SelectedResource) => void;
-}
-
-function SelectResource(props: Props): React.ReactNode {
-  const [resources, setResources] = useState<Resource>({});
+function SelectResource(): React.ReactNode {
   const { resource, id } = useParams();
-  const [selectedResource] = useLocalStorage(LOCAL_STORAGE_KEYS.resource);
-  const [selected, setSelected] = useState(selectInitialResource);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { data } = useGetResourcesQuery();
+  const dispatch = useAppDispatch();
 
-  const { handleSelected } = props;
-
-  function selectInitialResource() {
-    if (selectedResource && resource) return resource;
-    return selectedResource || resource;
-  }
+  const selectedResource = useAppSelector(selectResource);
 
   useEffect(() => {
-    async function loadResources() {
-      const res = await fetch(API_URL);
-      const data: Resource = await res.json();
-      setResources(data);
-      if (selected) {
-        handleSelected({ name: selected, url: data[selected] });
-        navigate(
-          `/search/${selected}${id ? `/${id}` : ''}?${searchParams.toString()}`
-        );
-      } else {
-        const [name, url] = Object.entries(data)[0];
-        handleSelected({ name, url });
-        navigate(
-          `/search/${name}${id ? `/${id}` : ''}?${searchParams.toString()}`
-        );
-      }
-    }
-    if (!Object.keys(resources).length) loadResources().then(() => {});
-  }, [handleSelected, selected, resources, navigate, id, searchParams]);
+    if (resource) dispatch(setResource({ resource, url: '' }));
+  }, [dispatch, resource]);
+
+  useEffect(() => {
+    if (!data) return;
+    if (!selectedResource) {
+      const [resource, url] = Object.entries(data)[0];
+      dispatch(setResource({ resource, url }));
+      navigate(
+        `/search/${resource}${id ? `/${id}` : ''}?${searchParams.toString()}`
+      );
+    } else
+      dispatch(
+        setResource({ resource: selectedResource, url: data[selectedResource] })
+      );
+  }, [navigate, id, searchParams, data, dispatch, selectedResource]);
 
   function handleSelect(option: string) {
-    setSelected(option);
-    const url = resources[option];
-    handleSelected({ name: option, url });
+    if (!data) return;
+    dispatch(setResource({ resource: option, url: data[option] }));
   }
 
   return (
-    <Select
-      options={Object.keys(resources)}
-      defaultValue={selected || Object.keys(resources)[0]}
-      handleSelected={handleSelect}
-    />
+    data && (
+      <Select
+        options={Object.keys(data)}
+        defaultValue={selectedResource || Object.keys(data)[0]}
+        handleSelected={handleSelect}
+      />
+    )
   );
 }
 

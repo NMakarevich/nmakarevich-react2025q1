@@ -1,53 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
 import './search.scss';
 import SelectResource from '../selectResource/selectResource.tsx';
 import useLocalStorage from '../../hooks/local-storage.tsx';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
+import {
+  selectResource,
+  selectUrl,
+  setRequestUrl,
+} from '../../redux/resources.slice.ts';
 
-export interface SelectedResource {
-  name: string;
-  url: string;
-}
-
-interface Props {
-  getRequestUrl: (requestUrl: string) => void;
-}
-
-function Search(props: Props): React.ReactNode {
+function Search(): React.ReactNode {
   const [localStorageSearch, setLocalStorageSearch] = useLocalStorage(
     LOCAL_STORAGE_KEYS.search
   );
-  const [localStorageResource, setLocalStorageResource] = useLocalStorage(
-    LOCAL_STORAGE_KEYS.resource
-  );
-  const { resource } = useParams();
   const [search, setSearch] = useState<string>(localStorageSearch);
-  const [selectedResource, setSelectedResource] = useState<SelectedResource>({
-    name: resource || localStorageResource,
-    url: '',
-  });
+  const [isInit, setIsInit] = useState(true);
+  const { resource } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const { getRequestUrl } = props;
+  const selectedResource = useAppSelector(selectResource);
+  const url = useAppSelector(selectUrl);
+  const dispatch = useAppDispatch();
 
   function handleButtonClick() {
     setLocalStorageSearch(search);
-    setLocalStorageResource(selectedResource.name);
-    getRequestUrl(`${selectedResource.url}${search ? `?name=${search}` : ''}`);
-    if (resource !== selectedResource.name) {
-      navigate(`/search/${selectedResource.name}`);
+    dispatch(setRequestUrl(`${url}${search ? `?name=${search}` : ''}`));
+    if (resource !== selectedResource) {
+      navigate(`/search/${selectedResource}`);
     }
   }
 
-  function selectResource(res: SelectedResource) {
-    if (!selectedResource.url) {
-      getRequestUrl(`${res.url}${search ? `?name=${search}` : ''}`);
+  useEffect(() => {
+    if (url && isInit) {
+      const page = searchParams.get('page');
+      const params = new URLSearchParams(url.split('?')[1]);
+      if (!params.has('page') && page) params.set('page', page);
+      if (search) params.set('name', search);
+      dispatch(setRequestUrl(`${url}?${params.toString()}`));
+      setIsInit(false);
     }
-    setSelectedResource(res);
-  }
+  }, [dispatch, isInit, search, searchParams, url]);
 
   function getInputValue(value: string) {
     setSearch(value);
@@ -55,7 +51,7 @@ function Search(props: Props): React.ReactNode {
 
   return (
     <>
-      <SelectResource handleSelected={selectResource} />
+      <SelectResource />
       <div className={'search'}>
         <Input
           name={'search'}
