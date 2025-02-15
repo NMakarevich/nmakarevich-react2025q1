@@ -3,12 +3,16 @@ import { BrowserRouter } from 'react-router';
 import { fireEvent, render, screen } from '@testing-library/react';
 import Pagination from '../components/pagination/pagination.tsx';
 import { response } from './mock.ts';
+import { Provider } from 'react-redux';
+import { store } from '../redux/store.ts';
 
 describe('Pagination tests', () => {
   it('Should change search params', async () => {
     render(
       <BrowserRouter>
-        <Pagination info={response.info} />
+        <Provider store={store}>
+          <Pagination info={response.info} />
+        </Provider>
       </BrowserRouter>
     );
     const currentSearch = window.location.search;

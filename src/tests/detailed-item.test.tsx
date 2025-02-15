@@ -1,13 +1,12 @@
 import { describe, expect, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import DetailedItem from '../components/detailed-item/detailed-item.tsx';
-import { BrowserRouter, Params } from 'react-router';
+import { Params } from 'react-router';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { episode, location, response } from './mock.ts';
 import '@testing-library/jest-dom';
-import { Provider } from 'react-redux';
-import { store } from '../redux/store.ts';
+import { renderWithProviders } from './test-utils.tsx';
 
 const requestUrl = 'https://rickandmortyapi.com/api/character/1';
 
@@ -34,38 +33,23 @@ vi.mock('react-router', async (importOriginal) => {
 
 describe('Detailed Item', () => {
   it('Should display loader', () => {
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <DetailedItem />
-        </Provider>
-      </BrowserRouter>
-    );
+    renderWithProviders(<DetailedItem />);
     const loader = screen.getByText('Loading...');
     expect(loader).toBeTruthy();
   });
   it('Should display detailed item', async () => {
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <DetailedItem />
-        </Provider>
-      </BrowserRouter>
-    );
+    renderWithProviders(<DetailedItem />);
     const card = await screen.findByText('Name:');
     expect(card).toBeTruthy();
   });
   it('Should close detailed item', async () => {
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <DetailedItem />
-        </Provider>
-      </BrowserRouter>
-    );
+    window.history.pushState(null, '', '/search/characters/1');
+    renderWithProviders(<DetailedItem />);
     const button = await screen.findByText('Close');
+    const prevPath = window.location.pathname;
     fireEvent.click(button);
-    expect(screen.queryByText('Close')).not.toBeInTheDocument();
+    const currentPath = window.location.pathname;
+    expect(prevPath).not.toEqual(currentPath);
   });
   it('Should render location card', async () => {
     server.use(
@@ -73,13 +57,7 @@ describe('Detailed Item', () => {
         return HttpResponse.json(location.results[0]);
       })
     );
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <DetailedItem />
-        </Provider>
-      </BrowserRouter>
-    );
+    renderWithProviders(<DetailedItem />);
     const dimension = await screen.findByText(location.results[0].dimension);
     expect(dimension).toBeInTheDocument();
   });
@@ -89,13 +67,7 @@ describe('Detailed Item', () => {
         return HttpResponse.json(episode.results[0]);
       })
     );
-    render(
-      <BrowserRouter>
-        <Provider store={store}>
-          <DetailedItem />
-        </Provider>
-      </BrowserRouter>
-    );
+    renderWithProviders(<DetailedItem />);
     const air_date = await screen.findByText(episode.results[0].air_date);
     expect(air_date).toBeInTheDocument();
   });

@@ -1,16 +1,12 @@
 import { describe, expect } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import Search from '../components/search/search.tsx';
-import { BrowserRouter } from 'react-router';
+import { renderWithProviders } from './test-utils.tsx';
 
 describe('Search', () => {
   it('Should save search term to localStorage', () => {
     const searchTerm = 'rick';
-    render(
-      <BrowserRouter>
-        <Search getRequestUrl={() => {}} />
-      </BrowserRouter>
-    );
+    renderWithProviders(<Search />);
     localStorage.clear();
     const searchInput = screen.getByRole('textbox');
     fireEvent.change(searchInput, { target: { value: searchTerm } });
@@ -21,11 +17,7 @@ describe('Search', () => {
   });
   it('Should insert search term from localStorage to input', () => {
     const searchTerm = localStorage.getItem('search');
-    render(
-      <BrowserRouter>
-        <Search getRequestUrl={() => {}} />
-      </BrowserRouter>
-    );
+    renderWithProviders(<Search />);
     const input: HTMLInputElement = screen.getByRole('textbox');
     const inputValue = input.value;
     expect(inputValue).toEqual(searchTerm);
