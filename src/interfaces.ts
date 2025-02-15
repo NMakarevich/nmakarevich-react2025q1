@@ -40,15 +40,12 @@ export interface Episode {
 }
 
 export interface Response {
-  results: Character[] | Location[] | Episode[];
+  results: Card[];
   info: ResponseInfo;
   error?: string;
 }
 
-export interface ResponseDetailed {
-  data: Character | Location | Episode | null;
-  error?: string;
-}
+export type Card = Character | Location | Episode;
 
 export interface ResponseInfo {
   count: number;
@@ -61,3 +58,5 @@ export interface IThemeContext {
   isSwitched: boolean;
   setIsSwitched: (isSwitched: boolean) => void;
 }
+
+export type Resources = { [key: string]: string };

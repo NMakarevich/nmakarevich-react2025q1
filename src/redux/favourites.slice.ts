@@ -1,9 +1,9 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from './store.ts';
-import { Character, Episode, Location } from '../interfaces.ts';
+import { Card } from '../interfaces.ts';
 
 export interface FavouritesState {
-  favourites: { [key: string]: (Character | Location | Episode)[] };
+  favourites: { [key: string]: Card[] };
   resource: string;
 }
 
@@ -19,18 +19,12 @@ export const favouritesSlice = createSlice({
     setResource: (state: FavouritesState, action: PayloadAction<string>) => {
       state.resource = action.payload;
     },
-    addFavourite: (
-      state: FavouritesState,
-      action: PayloadAction<Character | Location | Episode>
-    ) => {
+    addFavourite: (state: FavouritesState, action: PayloadAction<Card>) => {
       if (Array.isArray(state.favourites[state.resource]))
         state.favourites[state.resource].push(action.payload);
       else state.favourites[state.resource] = [action.payload];
     },
-    removeFavourite: (
-      state: FavouritesState,
-      action: PayloadAction<Character | Location | Episode>
-    ) => {
+    removeFavourite: (state: FavouritesState, action: PayloadAction<Card>) => {
       state.favourites[state.resource] = state.favourites[
         state.resource
       ].filter((item) => item.id !== action.payload.id);

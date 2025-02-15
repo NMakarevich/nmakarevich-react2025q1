@@ -1,5 +1,5 @@
 import React from 'react';
-import { Character, Episode, Location } from '../../interfaces.ts';
+import { Card } from '../../interfaces.ts';
 import './result-item.scss';
 import ResultItemCharacter from './result-item-character.tsx';
 import ResultItemLocation from './result-item-location.tsx';
@@ -7,7 +7,7 @@ import ResultItemEpisode from './result-item-episode.tsx';
 import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
 
 interface Props {
-  result: Character | Location | Episode;
+  result: Card;
 }
 
 function ResultItem(props: Props): React.ReactNode {

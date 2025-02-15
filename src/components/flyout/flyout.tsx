@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
 import { selectFavourites, unselectAll } from '../../redux/favourites.slice.ts';
 import Button from '../ui/button/button.tsx';
-import { Character, Episode, Location } from '../../interfaces.ts';
+import { Card } from '../../interfaces.ts';
 import './flyout.scss';
 
 function Flyout(): ReactNode {
@@ -14,10 +14,7 @@ function Flyout(): ReactNode {
     dispatch(unselectAll());
   }
 
-  function generateTable(
-    resource: string,
-    items: (Character | Location | Episode)[]
-  ): string {
+  function generateTable(resource: string, items: Card[]): string {
     if (!items || !items.length) return '';
     let table = `${resource} \r\n`;
     const headers = `${Object.keys(items[0]).join(';')}`;

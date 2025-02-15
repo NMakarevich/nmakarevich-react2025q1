@@ -1,8 +1,8 @@
-import { Character, Episode, Location } from '../interfaces.ts';
+import { Card } from '../interfaces.ts';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface DetailsSlice {
-  details: Character | Location | Episode | null;
+  details: Card | null;
 }
 
 export const initialState: DetailsSlice = {
@@ -13,10 +13,7 @@ export const detailsSlice = createSlice({
   name: 'details',
   initialState,
   reducers: {
-    saveDetails: (
-      state: DetailsSlice,
-      action: PayloadAction<Character | Location | Episode>
-    ) => {
+    saveDetails: (state: DetailsSlice, action: PayloadAction<Card>) => {
       state.details = action.payload;
     },
     deleteDetails: (state: DetailsSlice) => {
