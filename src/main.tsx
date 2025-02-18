@@ -8,8 +8,11 @@ import NotFoundPage from './pages/NotFound/not-found.tsx';
 import Main from './pages/Main/main.tsx';
 import { Provider } from 'react-redux';
 import { store } from './redux/store.ts';
+import { fetchResources } from './redux/resources.slice.ts';
 
 const root = document.getElementById('root');
+
+store.dispatch(fetchResources());
 
 if (root)
   createRoot(root).render(

@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react';
 import Select from '../ui/select/select.tsx';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useGetResourcesQuery } from '../../redux/api.ts';
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import { selectResource, setResource } from '../../redux/resources.slice.ts';
-
-export interface Resource {
-  [resource: string]: string;
-}
+import {
+  selectResource,
+  selectResources,
+  setResource,
+} from '../../redux/resources.slice.ts';
 
 function SelectResource(): React.ReactNode {
   const { resource, id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { data } = useGetResourcesQuery();
+  const resources = useAppSelector(selectResources);
   const dispatch = useAppDispatch();
 
   const selectedResource = useAppSelector(selectResource);
@@ -23,28 +22,33 @@ function SelectResource(): React.ReactNode {
   }, [dispatch, resource]);
 
   useEffect(() => {
-    if (!data) return;
+    if (!resources) return;
     if (!selectedResource) {
-      const [resource, url] = Object.entries(data)[0];
+      const [resource, url] = Object.entries(resources)[0];
       dispatch(setResource({ resource, url }));
       navigate(
         `/search/${resource}${id ? `/${id}` : ''}?${searchParams.toString()}`
       );
     } else
       dispatch(
-        setResource({ resource: selectedResource, url: data[selectedResource] })
+        setResource({
+          resource: selectedResource,
+          url: resources[selectedResource],
+        })
       );
-  }, [navigate, id, searchParams, data, dispatch, selectedResource]);
+  }, [navigate, id, searchParams, resources, dispatch, selectedResource]);
 
   function handleSelect(option: string) {
-    if (!data) return;
-    dispatch(setResource({ resource: option, url: data[option] }));
+    if (!resources) return;
+    dispatch(setResource({ resource: option, url: resources[option] }));
   }
 
   return (
     <Select
-      options={Object.keys(data ? data : {})}
-      defaultValue={selectedResource || Object.keys(data ? data : {})[0]}
+      options={Object.keys(resources ? resources : {})}
+      defaultValue={
+        selectedResource || Object.keys(resources ? resources : {})[0]
+      }
       handleSelected={handleSelect}
     />
   );
