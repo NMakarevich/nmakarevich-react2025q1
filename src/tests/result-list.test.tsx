@@ -18,13 +18,19 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+const initialState = {
+  resource: 'characters',
+  url: 'https://rickandmortyapi.com/api/character',
+  requestUrl: requestUrl,
+  resources: {
+    characters: 'https://rickandmortyapi.com/api/character',
+    locations: 'https://rickandmortyapi.com/api/location',
+    episodes: 'https://rickandmortyapi.com/api/episode',
+  },
+};
+
 describe('Result list', () => {
   it('Should show loader', () => {
-    const initialState = {
-      resource: 'characters',
-      url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: requestUrl,
-    };
     renderWithProviders(<ResultList />, {
       preloadedState: { resources: initialState },
     });
@@ -32,11 +38,6 @@ describe('Result list', () => {
     expect(loader).toBeTruthy();
   });
   it('Result list render correctly', async () => {
-    const initialState = {
-      resource: 'characters',
-      url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: requestUrl,
-    };
     renderWithProviders(<ResultList />, {
       preloadedState: { resources: initialState },
     });
@@ -52,11 +53,6 @@ describe('Result list', () => {
         );
       })
     );
-    const initialState = {
-      resource: 'characters',
-      url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: requestUrl,
-    };
     renderWithProviders(<ResultList />, {
       preloadedState: { resources: initialState },
     });
@@ -69,11 +65,6 @@ describe('Result list', () => {
         return HttpResponse.json(location);
       })
     );
-    const initialState = {
-      resource: 'characters',
-      url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: requestUrl,
-    };
     renderWithProviders(<ResultList />, {
       preloadedState: { resources: initialState },
     });
@@ -86,11 +77,6 @@ describe('Result list', () => {
         return HttpResponse.json(episode);
       })
     );
-    const initialState = {
-      resource: 'characters',
-      url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: requestUrl,
-    };
     renderWithProviders(<ResultList />, {
       preloadedState: { resources: initialState },
     });

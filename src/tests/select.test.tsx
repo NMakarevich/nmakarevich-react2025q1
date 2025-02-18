@@ -25,8 +25,20 @@ afterAll(() => server.close());
 
 describe('Select test', () => {
   it('Should change selected item', async () => {
-    const { container } = renderWithProviders(<SelectResource />);
-    const selectList = await screen.findAllByText(Object.keys(response)[0]);
+    const initialState = {
+      resources: {
+        characters: 'https://rickandmortyapi.com/api/character',
+        locations: 'https://rickandmortyapi.com/api/location',
+        episodes: 'https://rickandmortyapi.com/api/episode',
+      },
+      resource: 'characters',
+      url: 'https://rickandmortyapi.com/api/character',
+      requestUrl: 'https://rickandmortyapi.com/api/character?page=1',
+    };
+    const { container } = renderWithProviders(<SelectResource />, {
+      preloadedState: { resources: initialState },
+    });
+    const selectList = screen.getAllByText(Object.keys(response)[0]);
     fireEvent.click(selectList[0]);
     const secondOption = container.querySelectorAll('.select-option')[1];
     fireEvent.click(secondOption);
