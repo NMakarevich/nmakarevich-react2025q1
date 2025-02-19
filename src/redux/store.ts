@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import favouritesReducer from './favourites.slice.ts';
 import detailsReducer from './details.slice.ts';
 import resourcesReducer from './resources.slice.ts';
+import resultsReducer from './results.slice.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import { rickAndMortyApi } from './api.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
@@ -11,6 +12,7 @@ export const store = configureStore({
     favourites: favouritesReducer,
     details: detailsReducer,
     resources: resourcesReducer,
+    results: resultsReducer,
     [rickAndMortyApi.reducerPath]: rickAndMortyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -23,6 +25,7 @@ const rootReducer = combineReducers({
   favourites: favouritesReducer,
   details: detailsReducer,
   resources: resourcesReducer,
+  results: resultsReducer,
   [rickAndMortyApi.reducerPath]: rickAndMortyApi.reducer,
 });
 
