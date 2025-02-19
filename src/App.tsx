@@ -9,7 +9,7 @@ import {
   useSearchParams,
 } from 'react-router';
 import Toggle from './components/ui/toggle/toggle.tsx';
-import { ThemeContext } from './providers/theme/theme.context.tsx';
+import { ThemeContext } from './providers/theme/theme.context.ts';
 import { useAppDispatch } from './redux/store.ts';
 import { setResource } from './redux/favourites.slice.ts';
 import Flyout from './components/flyout/flyout.tsx';
