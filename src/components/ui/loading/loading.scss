@@ -1,0 +1,48 @@
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 20;
+
+  &-image {
+    width: 300px;
+    height: 480px;
+    background-image: url("/rickandmorty.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation-name: shadow;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  }
+
+  &-title {
+    font-size: 4rem;
+    animation-name: shadow;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  }
+}
+
+@keyframes shadow {
+  from {
+    filter: drop-shadow(0 0 1px #58A249) drop-shadow(0 0 2px #00a8c9);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 10px #58A249) drop-shadow(0 0 20px #00a8c9);
+  }
+
+  to {
+    filter: drop-shadow(0 0 1px #58A249) drop-shadow(0 0 2px #00a8c9);
+  }
+}

@@ -1,0 +1,67 @@
+@use "styles/theme";
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+}
+
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1280px;
+  width: 100%;
+}
+
+.app-header {
+  display: flex;
+  justify-content: center;
+  background-color: theme.$header-background;
+  box-shadow: 0 0 5px 5px theme.$header-box-shadow;
+
+  &.light {
+    background-color: theme.$header-background-light;
+    box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
+  }
+
+  & .container {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+
+  & .container {
+    position: relative;
+    flex-direction: row;
+    gap: 20px;
+  }
+}
+
+.toggle {
+  margin-left: auto;
+}
+
+@media (max-width: 800px) {
+  .container {
+    padding: 10px;
+  }
+
+  .app-header .container {
+    .select,
+    .toggle{
+      margin-right: unset;
+      margin-left: unset;
+    }
+    flex-direction: column;
+    gap: 10px;
+  }
+}

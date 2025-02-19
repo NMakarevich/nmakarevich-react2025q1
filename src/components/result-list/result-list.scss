@@ -1,0 +1,19 @@
+.result {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  &-wrapper {
+    position: relative;
+    height: 75vh;
+    overflow-y: scroll;
+  }
+
+  &-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-gap: 20px;
+    padding: 10px;
+  }
+}
