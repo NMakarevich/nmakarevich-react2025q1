@@ -32,6 +32,7 @@ describe('ResultItem', () => {
       resource: 'characters',
       url: 'https://rickandmortyapi.com/api/character',
       requestUrl: 'https://rickandmortyapi.com/api/character?page=1&name=rick',
+      resources: null,
     };
     const initialPath = window.location.pathname;
     renderWithProviders(<ResultList />, {
