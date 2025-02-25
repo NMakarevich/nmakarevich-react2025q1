@@ -1,0 +1,107 @@
+@use "../../../styles/theme";
+
+.select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  margin-right: 5px;
+  padding: 5px;
+
+  &-list {
+    position: relative;
+    width: 125px;
+  }
+
+  &-value {
+    display: flex;
+    align-items: center;
+    padding: 5px 20px 5px 5px;
+    background-color: theme.$inputs-background;
+    border: 1px solid #00a8c9;
+    color: theme.$color;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.4s;
+
+    &:hover {
+      box-shadow: 0 0 4px #58a249;
+    }
+
+    &::after {
+      position: absolute;
+      right: 5px;
+      content: '';
+      width: 16px;
+      height: 16px;
+      background-image: url("/arrow_drop_down.svg");
+      background-position: center;
+      transition: transform 0.4s;
+    }
+
+    &.open::after {
+      transform: rotate(180deg);
+    }
+  }
+
+  &-options {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    list-style: none;
+    z-index: 30;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s;
+
+    &.open {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  &-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: theme.$inputs-background;
+    color: theme.$color;
+    border: 1px solid #00a8c9;
+    cursor: pointer;
+
+    &:first-child {
+      border-radius: 5px 5px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 5px 5px;
+    }
+
+    &:hover {
+      background-color: theme.$background-hover;
+    }
+  }
+
+  &-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 25;
+  }
+}
+
+.light {
+  .select {
+    &-value,
+    &-option {
+      background-color: theme.$background-light;
+      color: theme.$color-light;
+    }
+    &-option:hover {
+      background-color: theme.$background-light-hover;
+    }
+  }
+}

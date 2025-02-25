@@ -1,0 +1,28 @@
+@use "../../../styles/theme";
+
+.input {
+  padding: 5px;
+  background-color: theme.$inputs-background;
+  border: 1px solid #00a8c9;
+  border-radius: 5px;
+  color: theme.$color;
+  font-size: 1.5rem;
+
+  &:hover {
+    box-shadow: 0 0 4px 0 #58a249;
+  }
+}
+
+.light {
+  .input {
+    background-color: theme.$background-light;
+    color: theme.$color-light;
+  }
+}
+
+@media (max-width: 600px) {
+  .input {
+    font-size: 1.25rem;
+  }
+}
+
