@@ -1,15 +1,20 @@
 import { useState } from 'react';
 
 function useLocalStorage(key: string, defaultValue: string = '') {
+  const isClient = typeof window !== 'undefined';
   const [localStorageValue, setLocalStorageValue] =
     useState(getFromLocalStorage);
 
   function getFromLocalStorage() {
-    const ls = localStorage.getItem(key) || defaultValue;
-    return ls || defaultValue;
+    if (isClient) {
+      const ls = localStorage.getItem(key) || defaultValue;
+      return ls || defaultValue;
+    }
+    return defaultValue;
   }
 
   function saveToLocalStorage(value: string) {
+    if (!isClient) return;
     setLocalStorageValue(value);
     localStorage.setItem(key, value);
   }

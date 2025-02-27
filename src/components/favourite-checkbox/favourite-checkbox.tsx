@@ -5,7 +5,7 @@ import {
   selectFavouritesForResource,
 } from '../../redux/favourites.slice.ts';
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import { useParams } from 'react-router';
+import { useParams } from 'next/navigation';
 import { Card } from '../../interfaces.ts';
 import styles from './favourite-checkbox.module.scss';
 

@@ -54,12 +54,15 @@ export interface ResponseInfo {
   prev: string | null;
 }
 
+export interface DetailedResponse {
+  data: Card;
+  error?: string;
+}
+
 export interface IThemeContext {
   isSwitched: boolean;
   setIsSwitched: (isSwitched: boolean) => void;
 }
-
-export type Resources = { [key: string]: string };
 
 export interface ResponseError {
   status: number;
