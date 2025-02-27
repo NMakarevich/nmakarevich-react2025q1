@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: auto;
   margin-right: 5px;
   padding: 5px;
 
@@ -93,15 +92,13 @@
   }
 }
 
-.light {
-  .select {
-    &-value,
-    &-option {
-      background-color: theme.$background-light;
-      color: theme.$color-light;
-    }
-    &-option:hover {
-      background-color: theme.$background-light-hover;
-    }
+[data-theme='light'] .select {
+  &-value,
+  &-option {
+    background-color: theme.$background-light;
+    color: theme.$color-light;
+  }
+  &-option:hover {
+    background-color: theme.$background-light-hover;
   }
 }

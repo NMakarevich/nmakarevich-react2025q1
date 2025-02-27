@@ -22,9 +22,7 @@
   }
 }
 
-.light {
-  .button {
-    background-color: theme.$background-light;
-    color: theme.$color-light;
-  }
+[data-theme='light'] .button {
+  background-color: theme.$background-light;
+  color: theme.$color-light;
 }

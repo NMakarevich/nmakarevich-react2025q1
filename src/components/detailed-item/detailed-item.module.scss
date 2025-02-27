@@ -37,8 +37,6 @@
   }
 }
 
-.light {
-  .detailed {
-    background-color: theme.$background-light;
-  }
+[data-theme='light'] .detailed {
+  background-color: theme.$background-light;
 }

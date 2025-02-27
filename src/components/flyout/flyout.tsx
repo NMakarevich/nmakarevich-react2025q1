@@ -4,6 +4,7 @@ import { selectFavourites, unselectAll } from '../../redux/favourites.slice.ts';
 import Button from '../ui/button/button.tsx';
 import { Card } from '../../interfaces.ts';
 import './flyout.scss';
+import styles from './flyout.module.scss';
 
 function Flyout(): ReactNode {
   const favourites = useAppSelector(selectFavourites);
@@ -54,18 +55,22 @@ function Flyout(): ReactNode {
     <div
       className={`flyout ${Object.values(favourites).flat().length ? '' : 'hidden'}`}
     >
-      <p className={'flyout-info'}>
-        Selected {Object.values(favourites).flat().length} items.
-      </p>
-      <div className={'flyout-controls'}>
-        <a
-          href={generateURL() || ''}
-          className={'flyout-controls_download'}
-          download={`${Object.values(favourites).flat().length}_items.csv`}
-        >
-          Download
-        </a>
-        <Button title={'Unselect all'} handleClick={unselectAllItems} />
+      <div
+        className={`${styles.flyout} ${Object.values(favourites).flat().length ? '' : styles.hidden}`}
+      >
+        <p className={styles['flyout-info']}>
+          Selected {Object.values(favourites).flat().length} items.
+        </p>
+        <div className={styles['flyout-controls']}>
+          <a
+            href={generateURL() || ''}
+            className={styles['flyout-controls_download']}
+            download={`${Object.values(favourites).flat().length}_items.csv`}
+          >
+            Download
+          </a>
+          <Button title={'Unselect all'} handleClick={unselectAllItems} />
+        </div>
       </div>
     </div>
   );

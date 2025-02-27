@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '../../interfaces.ts';
-import './result-item.scss';
+import styles from './result-item.module.scss';
 import ResultItemCharacter from './result-item-character.tsx';
 import ResultItemLocation from './result-item-location.tsx';
 import ResultItemEpisode from './result-item-episode.tsx';
@@ -23,7 +23,7 @@ function ResultItem(props: Props): React.ReactNode {
   }
 
   return (
-    <div className={'result-item'}>
+    <div className={styles['result-item']}>
       {selectCard()}
       <FavouriteCheckbox result={result} />{' '}
     </div>

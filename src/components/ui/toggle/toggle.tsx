@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import './toggle.scss';
+import styles from './toggle.module.scss';
 
 interface Props {
   option1?: ReactNode;
@@ -24,15 +24,21 @@ function Toggle(props: Props): ReactNode {
   }
 
   return (
-    <div className={'toggle'}>
-      <span className={`toggle-variant`} onClick={() => selectValue(false)}>
+    <div className={styles.toggle}>
+      <span
+        className={styles[`toggle-variant`]}
+        onClick={() => selectValue(false)}
+      >
         {option1 || ''}
       </span>
       <span
-        className={`toggle-indicator ${isSwitched ? 'selected' : ''}`}
+        className={`${styles['toggle-indicator']} ${isSwitched ? styles.selected : ''}`}
         onClick={toggle}
       ></span>
-      <span className={'toggle-variant'} onClick={() => selectValue(true)}>
+      <span
+        className={styles[`toggle-variant`]}
+        onClick={() => selectValue(true)}
+      >
         {option2 || ''}
       </span>
     </div>

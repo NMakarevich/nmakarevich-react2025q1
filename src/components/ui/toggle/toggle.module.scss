@@ -45,11 +45,9 @@
   }
 }
 
-.light {
-  .toggle {
-    &-indicator {
-      background-color: theme.$background-light;
-      box-shadow: inset 0 0 2px 0 theme.$header-background;
-    }
+[data-theme='light'] .toggle {
+  &-indicator {
+    background-color: theme.$background-light;
+    box-shadow: inset 0 0 2px 0 theme.$header-background;
   }
 }

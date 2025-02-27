@@ -1,5 +1,5 @@
 import React from 'react';
-import './response-error.scss';
+import styles from './response-error.module.scss';
 
 interface Props {
   status: number;
@@ -10,9 +10,11 @@ function ResponseError(props: Props): React.ReactNode {
   const { status, message } = props;
 
   return (
-    <div className={'response-error'}>
-      <span className={'response-error_status'}>Status code: {status}</span>
-      <p className={'response-error_message'}>{message}</p>
+    <div className={styles['response-error']}>
+      <span className={styles['response-error_status']}>
+        Status code: {status}
+      </span>
+      <p className={styles['response-error_message']}>{message}</p>
     </div>
   );
 }

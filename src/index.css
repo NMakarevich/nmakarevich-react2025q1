@@ -27,7 +27,7 @@ body {
   color: #00a8c9;
 }
 
-body:has(.app-header.light) {
+[data-theme='light'] body {
   background-color: #FEF7FF;
   color: #202329;
 }

@@ -5,6 +5,7 @@ import './pagination.scss';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useAppDispatch } from '../../redux/store.ts';
 import { setRequestUrl } from '../../redux/resources.slice.ts';
+import styles from './pagination.module.scss';
 
 interface Props {
   info: ResponseInfo;
@@ -46,13 +47,13 @@ function Pagination(props: Props): React.ReactNode {
   }
 
   return (
-    <div className={'pagination'}>
+    <div className={styles.pagination}>
       <Button
         title={'Prev page'}
         handleClick={prevPage}
         disabled={page === 1}
       />
-      <span className={'pagination-info'}>{`${page} of ${pages}`}</span>
+      <span className={styles['pagination-info']}>{`${page} of ${pages}`}</span>
       <Button
         title={'Next page'}
         handleClick={nextPage}
