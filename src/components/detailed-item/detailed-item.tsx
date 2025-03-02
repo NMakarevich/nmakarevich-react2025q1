@@ -7,12 +7,10 @@ import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
 import { useAppDispatch } from '../../redux/store.ts';
 import { deleteDetails, saveDetails } from '../../redux/details.slice.ts';
 import styles from './detailed-item.module.scss';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { DetailedResponse } from '../../interfaces.ts';
 
 function DetailedItem(props: { detailed: DetailedResponse }): ReactNode {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [resource] = router.query.resource as string[];
 
@@ -24,10 +22,24 @@ function DetailedItem(props: { detailed: DetailedResponse }): ReactNode {
     dispatch(saveDetails(data));
   }, [dispatch, data]);
 
-  function closeDetails() {
-    const params = new URLSearchParams(searchParams);
-    router.push(`/search/${resource}?${params.toString()}`);
+  function getSearchParams() {
+    const url = new URL(window.location.href);
+    return new URLSearchParams(url.search);
+  }
+
+  async function closeDetails() {
+    const params = getSearchParams();
+    await router.push(`/search/${resource}?${params.toString()}`);
     dispatch(deleteDetails());
+  }
+
+  function selectCardComponent() {
+    if (data && 'image' in data && data.image)
+      return <DetailedItemCharacter item={data} />;
+    if (data && 'residents' in data && data.residents)
+      return <DetailedItemLocation item={data} />;
+    if (data && 'air_date' in data && data.air_date)
+      return <DetailedItemEpisode item={data} />;
   }
 
   return (
@@ -37,24 +49,10 @@ function DetailedItem(props: { detailed: DetailedResponse }): ReactNode {
           <div className={styles['detailed-close']} onClick={closeDetails}>
             Close
           </div>
-          {data && 'image' in data && data.image && (
-            <div className={styles['detailed-item-content']}>
-              <FavouriteCheckbox result={data} />
-              <DetailedItemCharacter item={data} />
-            </div>
-          )}
-          {data && 'residents' in data && data.residents && (
-            <div className={styles['detailed-item-content']}>
-              <FavouriteCheckbox result={data} />
-              <DetailedItemLocation item={data} />
-            </div>
-          )}
-          {data && 'air_date' in data && data.air_date && (
-            <div className={styles['detailed-item-content']}>
-              <FavouriteCheckbox result={data} />
-              <DetailedItemEpisode item={data} />
-            </div>
-          )}
+          <div className={styles['detailed-item-content']}>
+            <FavouriteCheckbox result={data} />
+            {selectCardComponent()}
+          </div>
         </div>
       )}
       {error && (
