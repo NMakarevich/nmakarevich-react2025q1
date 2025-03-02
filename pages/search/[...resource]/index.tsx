@@ -41,7 +41,6 @@ function Page(props: {
 }): ReactNode {
   const { data, detailed, error } = props;
   if (error) return <NotFoundPage />;
-  console.log(detailed);
 
   return (
     <Layout>
