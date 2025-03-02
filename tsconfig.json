@@ -36,6 +36,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true
   },
   "incremental": true
 }
