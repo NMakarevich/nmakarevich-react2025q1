@@ -34,11 +34,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "forceConsistentCasingInFileNames": true,
   },
-  "esModuleInterop": true,
-  "jsx": "preserve",
-  "allowJs": true,
-  "forceConsistentCasingInFileNames": true,
   "incremental": true
 }
