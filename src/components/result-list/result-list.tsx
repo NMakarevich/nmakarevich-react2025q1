@@ -43,9 +43,9 @@ function ResultList(props: Props): React.ReactNode {
     };
   }, [router]);
 
-  function closeDetails() {
+  async function closeDetails() {
     if (id && location.pathname.includes(id))
-      router.push(`/search/${resource}?${searchParams.toString()}`);
+      await router.push(`/search/${resource}?${searchParams.toString()}`);
   }
 
   return (
