@@ -23,21 +23,26 @@ function Pagination(props: Props): React.ReactNode {
     if (parseInt(urlPage) !== page) setPage(parseInt(urlPage));
   }, [page, searchParams]);
 
-  function prevPage() {
-    const params = new URLSearchParams(searchParams);
+  function getSearchParams() {
+    const url = new URL(window.location.href);
+    return new URLSearchParams(url.search);
+  }
+
+  async function prevPage() {
+    const params = getSearchParams();
     if (prev) {
       params.set('page', (page - 1).toString());
       setPage((prev) => prev - 1);
-      router.push(`/search/${resource as string}?${params.toString()}`);
+      await router.push(`/search/${resource as string}?${params.toString()}`);
     }
   }
 
-  function nextPage() {
-    const params = new URLSearchParams(searchParams);
+  async function nextPage() {
+    const params = getSearchParams();
     if (next) {
       params.set('page', (page + 1).toString());
       setPage((prev) => prev + 1);
-      router.push(`/search/${resource as string}?${params.toString()}`);
+      await router.push(`/search/${resource as string}?${params.toString()}`);
     }
   }
 
