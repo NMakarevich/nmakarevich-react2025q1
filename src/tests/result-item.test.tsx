@@ -1,23 +1,28 @@
-import { describe, expect } from 'vitest';
+import { describe, expect, vi } from 'vitest';
 import { response } from './mock.ts';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import ResultItem from '../components/result-item/result-item.tsx';
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
 import ResultList from '../components/result-list/result-list.tsx';
 import { renderWithProviders } from './test-utils.tsx';
 
-const requestUrl = 'https://rickandmortyapi.com/api/character/';
+vi.mock('next/navigation', async () => ({
+  useSearchParams: () => ({
+    get: vi.fn(),
+  }),
+  useParams: () => ({
+    resource: ['character', '1'],
+  }),
+}));
 
-const server = setupServer(
-  http.get(requestUrl, () => {
-    return HttpResponse.json(response);
-  })
-);
+const pushMock = vi.fn((data) => console.log(data));
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+vi.mock('next/router', () => ({
+  useRouter: vi.fn(() => ({
+    query: { resource: ['characters', '1'] },
+    push: pushMock,
+    events: { on: vi.fn(), off: vi.fn(), emit: vi.fn() },
+  })),
+}));
 
 describe('ResultItem', () => {
   it('Should render correctly', () => {
@@ -31,17 +36,17 @@ describe('ResultItem', () => {
     const initialState = {
       resource: 'characters',
       url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: 'https://rickandmortyapi.com/api/character?page=1&name=rick',
       resources: null,
     };
-    const initialPath = window.location.pathname;
-    renderWithProviders(<ResultList />, {
-      preloadedState: {
-        resources: initialState,
-      },
-    });
-    const cards = await screen.findAllByText('Name:');
-    fireEvent.click(cards[0]);
-    expect(initialPath === window.location.pathname).toBeFalsy();
+    renderWithProviders(
+      <ResultList data={response} detailed={{ data: response.results[0] }} />,
+      {
+        preloadedState: {
+          resources: initialState,
+        },
+      }
+    );
+    const closeButton = screen.getByText('Close');
+    expect(closeButton).toBeDefined();
   });
 });

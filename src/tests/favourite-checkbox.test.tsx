@@ -1,8 +1,14 @@
-import { describe, expect } from 'vitest';
+import { describe, expect, vi } from 'vitest';
 import FavouriteCheckbox from '../components/favourite-checkbox/favourite-checkbox.tsx';
 import { response } from './mock.ts';
 import { renderWithProviders } from './test-utils.tsx';
 import { fireEvent, screen } from '@testing-library/react';
+
+vi.mock('next/navigation', async () => ({
+  useParams: () => ({
+    resource: ['character'],
+  }),
+}));
 
 describe('FavouriteCheckbox', () => {
   it('Should be checked', () => {

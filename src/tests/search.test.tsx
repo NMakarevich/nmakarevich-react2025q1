@@ -1,7 +1,20 @@
-import { describe, expect } from 'vitest';
+import { describe, expect, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import Search from '../components/search/search.tsx';
 import { renderWithProviders } from './test-utils.tsx';
+
+vi.mock('next/navigation', async () => ({
+  useSearchParams: () => ({
+    get: vi.fn(),
+  }),
+}));
+
+vi.mock('next/router', async () => ({
+  useRouter: () => ({
+    query: { resource: ['characters'] },
+    push: vi.fn(),
+  }),
+}));
 
 describe('Search', () => {
   it('Should save search term to localStorage', () => {
