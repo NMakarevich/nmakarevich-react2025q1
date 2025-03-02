@@ -37,16 +37,6 @@ const initialState = {
 };
 
 describe('Result list', () => {
-  // it('Should show loader', async () => {
-  //   renderWithProviders(
-  //     <ResultList data={response} detailed={{ data: response.results[0] }} />,
-  //     {
-  //       preloadedState: { resources: initialState },
-  //     }
-  //   );
-  //   const loader = await screen.findByText('Loading...');
-  //   expect(loader).toBeTruthy();
-  // });
   it('Result list render correctly', async () => {
     renderWithProviders(
       <ResultList data={response} detailed={{ data: response.results[0] }} />,
