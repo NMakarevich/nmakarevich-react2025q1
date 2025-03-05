@@ -1,4 +1,4 @@
-import { Response } from '../interfaces.ts';
+import { CardsResponse, SearchParams } from '../interfaces.ts';
 
 export const location = {
   info: { count: 1, pages: 1, next: null, prev: null },
@@ -39,7 +39,7 @@ export const episode = {
   ],
 };
 
-export const response: Response = {
+export const response: CardsResponse = {
   info: {
     count: 826,
     pages: 42,
@@ -127,4 +127,25 @@ export const response: Response = {
       created: '2017-11-04T19:09:56.428Z',
     },
   ],
+};
+
+export const paramsCharacters: SearchParams = {
+  resource: 'characters',
+  page: '1',
+  id: '1',
+  name: '',
+};
+
+export const paramsLocations: SearchParams = {
+  resource: 'locations',
+  page: '1',
+  id: '1',
+  name: '',
+};
+
+export const paramsEpisodes: SearchParams = {
+  resource: 'episodes',
+  page: '1',
+  id: '1',
+  name: '',
 };

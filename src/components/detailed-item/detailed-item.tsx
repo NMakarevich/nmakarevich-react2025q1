@@ -1,36 +1,27 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import ResponseError from '../response-error/response-error.tsx';
 import DetailedItemCharacter from './detailed-item-character.tsx';
 import DetailedItemLocation from './detailed-item-location.tsx';
 import DetailedItemEpisode from './detailed-item-episode.tsx';
 import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
-import { useAppDispatch } from '../../redux/store.ts';
-import { deleteDetails, saveDetails } from '../../redux/details.slice.ts';
 import styles from './detailed-item.module.scss';
-import { useRouter } from 'next/router';
-import { DetailedResponse } from '../../interfaces.ts';
+import { DetailedResponse, SearchParams } from '../../interfaces.ts';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-function DetailedItem(props: { detailed: DetailedResponse }): ReactNode {
+interface Props {
+  params: SearchParams;
+  data: DetailedResponse;
+}
+
+function DetailedItem(props: Props): ReactNode {
+  const { data, params } = props;
+  const { resource } = params;
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const [resource] = router.query.resource as string[];
 
-  const dispatch = useAppDispatch();
-
-  const { data, error } = props.detailed;
-
-  useEffect(() => {
-    dispatch(saveDetails(data));
-  }, [dispatch, data]);
-
-  function getSearchParams() {
-    const url = new URL(window.location.href);
-    return new URLSearchParams(url.search);
-  }
-
-  async function closeDetails() {
-    const params = getSearchParams();
-    await router.push(`/search/${resource}?${params.toString()}`);
-    dispatch(deleteDetails());
+  function closeDetails() {
+    const params = new URLSearchParams(searchParams.toString());
+    router.push(`/search/${resource}?${params.toString()}`);
   }
 
   function selectCardComponent() {
@@ -44,7 +35,7 @@ function DetailedItem(props: { detailed: DetailedResponse }): ReactNode {
 
   return (
     <div className={styles.detailed}>
-      {data && (
+      {data && !('error' in data) && (
         <div className={styles['detailed-item']}>
           <div className={styles['detailed-close']} onClick={closeDetails}>
             Close
@@ -55,8 +46,8 @@ function DetailedItem(props: { detailed: DetailedResponse }): ReactNode {
           </div>
         </div>
       )}
-      {error && (
-        <ResponseError status={404} message={error || 'Unknown error'} />
+      {data && 'error' in data && (
+        <ResponseError status={404} message={data.error || 'Unknown error'} />
       )}
     </div>
   );

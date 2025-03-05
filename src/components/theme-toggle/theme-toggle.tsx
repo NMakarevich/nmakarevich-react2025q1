@@ -1,23 +1,22 @@
-import { ReactElement, useContext, useEffect } from 'react';
-import { ThemeContext } from '../../providers/theme/theme.context.ts';
+'use client';
+
+import { ReactElement } from 'react';
 import Toggle from '../ui/toggle/toggle.tsx';
 
 function ThemeToggle(): ReactElement {
-  const { isSwitched, setIsSwitched } = useContext(ThemeContext);
-
-  useEffect(() => {
+  function toggleTheme(isSwitched: boolean) {
     document.documentElement.setAttribute(
       'data-theme',
       isSwitched ? 'light' : ''
     );
-  }, [isSwitched]);
+  }
 
   return (
     <Toggle
       option1={'Dark'}
       option2={'Light'}
-      onToggle={setIsSwitched}
-      initState={isSwitched}
+      onToggle={toggleTheme}
+      initState={false}
     />
   );
 }
