@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode } from 'react';
 import ResponseError from '../response-error/response-error.tsx';
 import DetailedItemCharacter from './detailed-item-character.tsx';
