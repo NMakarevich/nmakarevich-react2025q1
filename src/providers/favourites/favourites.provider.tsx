@@ -16,7 +16,7 @@ function FavouritesProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (params) {
+    if (params && params.resource) {
       const [resource] = params.resource;
       setResource(resource);
     }
