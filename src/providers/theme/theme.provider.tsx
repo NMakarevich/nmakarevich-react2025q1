@@ -1,7 +1,7 @@
-import { ReactNode, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ThemeContext } from './theme.context.ts';
 
-function ThemeProvider({ children }: { children: ReactNode }) {
+function ThemeProvider({ children }: { children: ReactNode }): React.ReactNode {
   const [isSwitched, setIsSwitched] = useState<boolean>(false);
   return (
     <ThemeContext.Provider

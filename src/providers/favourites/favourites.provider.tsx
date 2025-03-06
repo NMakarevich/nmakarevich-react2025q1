@@ -1,11 +1,15 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { FavouritesContext } from './favourites.context.ts';
 import { Card, Favourites } from '../../interfaces.ts';
 import { useParams } from 'next/navigation';
 
-function FavouritesProvider({ children }: { children: ReactNode }) {
+function FavouritesProvider({
+  children,
+}: {
+  children: ReactNode;
+}): React.ReactNode {
   const params = useParams<{ resource: string[] }>();
   const [favouritesObj, setFavouritesObj] = useState<Favourites>({});
   const [resource, setResource] = useState<string>(initParams);

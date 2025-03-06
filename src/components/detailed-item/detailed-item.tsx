@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import React from 'react';
 import ResponseError from '../response-error/response-error.tsx';
 import DetailedItemCharacter from './detailed-item-character.tsx';
 import DetailedItemLocation from './detailed-item-location.tsx';
@@ -15,7 +15,7 @@ interface Props {
   data: DetailedResponse;
 }
 
-function DetailedItem(props: Props): ReactNode {
+function DetailedItem(props: Props): React.ReactNode {
   const { data, params } = props;
   const { resource } = params;
   const searchParams = useSearchParams();

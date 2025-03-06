@@ -1,10 +1,14 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ResourceContext } from './resource.context.ts';
 import { useParams } from 'next/navigation';
 
-function ResourceProvider({ children }: { children: ReactNode }): ReactNode {
+function ResourceProvider({
+  children,
+}: {
+  children: ReactNode;
+}): React.ReactNode {
   const [resource] = useParams<{ resource: string[] }>().resource;
   const [selectedResource, setSelectedResource] = useState<string>(resource);
 

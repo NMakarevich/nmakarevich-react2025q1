@@ -1,13 +1,13 @@
 'use client';
 
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '../ui/button/button.tsx';
 import { Card } from '../../interfaces.ts';
 import styles from './flyout.module.scss';
 import { ThemeContext } from '../../providers/theme/theme.context.ts';
 import { FavouritesContext } from '../../providers/favourites/favourites.context.ts';
 
-function Flyout(): ReactNode {
+function Flyout(): React.ReactNode {
   const { getFavourites, unselectAll } = useContext(FavouritesContext);
   const [csvString, setCsvString] = useState<string>('');
   const { isSwitched } = useContext(ThemeContext);

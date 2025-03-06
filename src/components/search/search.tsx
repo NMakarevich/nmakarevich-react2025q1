@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
@@ -9,7 +9,7 @@ import useLocalStorage from '../../hooks/local-storage.tsx';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ResourceContext } from '../../providers/resource/resource.context.ts';
 
-function Search(): ReactNode {
+function Search(): React.ReactNode {
   const { resource } = useParams<{ resource: string }>();
   const router = useRouter();
   const [localStorageSearch, setLocalStorageSearch] = useLocalStorage(

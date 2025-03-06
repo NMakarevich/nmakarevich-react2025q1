@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React from 'react';
 import ResultItem from '../result-item/result-item.tsx';
 import styles from './result-list.module.scss';
 import Pagination from '../pagination/pagination.tsx';
@@ -12,7 +12,7 @@ interface Props {
   params: SearchParams;
 }
 
-function ResultList(props: Props): ReactNode {
+function ResultList(props: Props): React.ReactNode {
   const { data } = props;
   const { resource, page, name } = props.params;
 

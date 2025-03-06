@@ -1,9 +1,9 @@
 'use client';
 
-import { ReactElement } from 'react';
+import React from 'react';
 import Toggle from '../ui/toggle/toggle.tsx';
 
-function ThemeToggle(): ReactElement {
+function ThemeToggle(): React.ReactElement {
   function toggleTheme(isSwitched: boolean) {
     document.documentElement.setAttribute(
       'data-theme',
