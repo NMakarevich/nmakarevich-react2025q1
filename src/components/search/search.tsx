@@ -1,49 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
 import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
 import './search.scss';
 import SelectResource from '../selectResource/selectResource.tsx';
 import useLocalStorage from '../../hooks/local-storage.tsx';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import {
-  selectResource,
-  selectUrl,
-  setRequestUrl,
-} from '../../redux/resources.slice.ts';
+import { useNavigate, useSearchParams } from 'react-router';
+import { ResourceContext } from '../../providers/resource/resource.context.ts';
 
 function Search(): React.ReactNode {
   const [localStorageSearch, setLocalStorageSearch] = useLocalStorage(
     LOCAL_STORAGE_KEYS.search
   );
   const [search, setSearch] = useState<string>(localStorageSearch);
-  const [isInit, setIsInit] = useState(true);
-  const { resource } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const selectedResource = useAppSelector(selectResource);
-  const url = useAppSelector(selectUrl);
-  const dispatch = useAppDispatch();
+  const { selectedResource } = useContext(ResourceContext);
 
   function handleButtonClick() {
     setLocalStorageSearch(search);
-    dispatch(setRequestUrl(`${url}${search ? `?name=${search}` : ''}`));
-    if (resource !== selectedResource) {
-      navigate(`/search/${selectedResource}`);
-    }
+    if (search) searchParams.set('name', search);
+    else searchParams.delete('name');
+    searchParams.set('page', '1');
+    navigate(`/search/${selectedResource}?${searchParams.toString()}`);
   }
-
-  useEffect(() => {
-    if (url && isInit) {
-      const page = searchParams.get('page');
-      const params = new URLSearchParams(url.split('?')[1]);
-      if (!params.has('page') && page) params.set('page', page);
-      if (search) params.set('name', search);
-      dispatch(setRequestUrl(`${url}?${params.toString()}`));
-      setIsInit(false);
-    }
-  }, [dispatch, isInit, search, searchParams, url]);
 
   function getInputValue(value: string) {
     setSearch(value);

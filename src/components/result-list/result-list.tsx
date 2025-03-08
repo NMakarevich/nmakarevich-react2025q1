@@ -9,31 +9,33 @@ import {
   Outlet,
   useLocation,
   useNavigate,
+  useNavigation,
   useParams,
   useSearchParams,
 } from 'react-router';
-import { useGetCardsQuery } from '../../redux/api.ts';
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
 import { selectRequestUrl } from '../../redux/resources.slice.ts';
-import { parseError } from '../../utils.ts';
 import { setResults } from '../../redux/results.slice.ts';
+import { Response } from '../../interfaces.ts';
 
-function ResultList(): React.ReactNode {
+interface Props {
+  data: Response;
+}
+
+function ResultList({ data }: Props): React.ReactNode {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { resource, id } = useParams();
   const requestUrl = useAppSelector(selectRequestUrl);
   const dispatch = useAppDispatch();
-
-  const { isFetching, data, error } = useGetCardsQuery(requestUrl, {
-    skip: !requestUrl,
-  });
+  const navigation = useNavigation();
+  const isFetching = Boolean(navigation.location);
 
   useEffect(() => {
-    if (data && !error) dispatch(setResults(data.results));
-    if (error) dispatch(setResults([]));
-  }, [data, dispatch, error]);
+    if (data && data.results.length) dispatch(setResults(data.results));
+    if (data.results.length === 0) dispatch(setResults([]));
+  }, [data, dispatch]);
 
   function closeDetails() {
     if (id && location.pathname.includes(id))
@@ -43,7 +45,7 @@ function ResultList(): React.ReactNode {
   return (
     <>
       {isFetching && <Loading />}
-      {!error && data && data.results && data.results.length > 0 ? (
+      {data && data.results && !!data.results.length ? (
         <>
           <div className={'result'}>
             <Pagination info={data.info} />
@@ -64,11 +66,9 @@ function ResultList(): React.ReactNode {
           <Outlet />
         </>
       ) : (
-        error && (
-          <ResponseError
-            status={parseError(error)?.status || 0}
-            message={parseError(error)?.data.error || 'Unknown error'}
-          />
+        data.results &&
+        data.results.length === 0 && (
+          <ResponseError status={404} message={'There is nothing here'} />
         )
       )}
     </>

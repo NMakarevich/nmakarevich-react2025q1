@@ -2,38 +2,39 @@ import './App.scss';
 import React, { useContext, useEffect } from 'react';
 import Search from './components/search/search.tsx';
 import ResultList from './components/result-list/result-list.tsx';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import Toggle from './components/ui/toggle/toggle.tsx';
 import { ThemeContext } from './providers/theme/theme.context.ts';
-import { useAppDispatch } from './redux/store.ts';
-import { setResource } from './redux/favourites.slice.ts';
 import Flyout from './components/flyout/flyout.tsx';
+import { ResourceContext } from './providers/resource/resource.context.ts';
+import { Response } from './interfaces.ts';
+import useLocalStorage from './hooks/local-storage.tsx';
+import { LOCAL_STORAGE_KEYS } from './constants.ts';
 
-function App(): React.ReactNode {
+interface Props {
+  data: Response;
+}
+
+function App(props: Props): React.ReactNode {
   const { isSwitched, setIsSwitched } = useContext(ThemeContext);
   const [searchParams] = useSearchParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const { resource } = useParams();
-  const dispatch = useAppDispatch();
+  const { selectedResource, setSelectedResource } = useContext(ResourceContext);
+  const [searchTerm] = useLocalStorage(LOCAL_STORAGE_KEYS.search);
 
   useEffect(() => {
-    if (resource) dispatch(setResource(resource));
-  }, [dispatch, resource]);
+    if (resource) setSelectedResource(resource);
+  }, [setSelectedResource, resource]);
 
   useEffect(() => {
     if (!searchParams.get('page')) {
-      const { pathname } = location;
       const params = new URLSearchParams(searchParams);
       params.set('page', '1');
-      navigate(`${pathname}?${params.toString()}`);
+      if (searchTerm) params.set('name', searchTerm);
+      navigate(`/search/${selectedResource}?${params.toString()}`);
     }
-  });
+  }, [navigate, searchParams, searchTerm, selectedResource]);
 
   return (
     <>
@@ -50,7 +51,7 @@ function App(): React.ReactNode {
       </header>
       <main className={`app-main  ${isSwitched ? 'light' : ''}`}>
         <div className="container">
-          <ResultList />
+          <ResultList data={props.data} />
         </div>
       </main>
       <div className={`flyout-wrapper ${isSwitched ? 'light' : ''}`}>

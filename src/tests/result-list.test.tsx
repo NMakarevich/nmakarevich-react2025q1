@@ -2,21 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
 import ResultList from '../components/result-list/result-list.tsx';
 import { response, location, episode } from './mock.ts';
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
 import { renderWithProviders } from './test-utils.tsx';
+import { MemoryRouter } from 'react-router';
 
 const requestUrl = 'https://rickandmortyapi.com/api/character?page=1&name=rick';
-
-const server = setupServer(
-  http.get(requestUrl, () => {
-    return HttpResponse.json(response);
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 const initialState = {
   resource: 'characters',
@@ -29,57 +18,82 @@ const initialState = {
   },
 };
 
+const mockLocation = vi.fn();
+
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useNavigation: vi.fn(() => ({
+      location: mockLocation,
+    })),
+  };
+});
+
 describe('Result list', () => {
   it('Should show loader', () => {
-    renderWithProviders(<ResultList />, {
-      preloadedState: { resources: initialState },
-    });
+    mockLocation.mockReturnValue(true);
+    renderWithProviders(
+      <MemoryRouter>
+        <ResultList data={response} />
+      </MemoryRouter>,
+      {
+        preloadedState: { resources: initialState },
+      }
+    );
     const loader = screen.getByText('Loading...');
     expect(loader).toBeTruthy();
   });
   it('Result list render correctly', async () => {
-    renderWithProviders(<ResultList />, {
-      preloadedState: { resources: initialState },
-    });
+    renderWithProviders(
+      <MemoryRouter>
+        <ResultList data={response} />
+      </MemoryRouter>,
+      {
+        preloadedState: { resources: initialState },
+      }
+    );
     const cards = await screen.findAllByText('Name:');
     expect(cards.length).toEqual(response.results.length);
   });
   it('Should displays "There is nothing here"', async () => {
-    server.use(
-      http.get(requestUrl, () => {
-        return HttpResponse.json(
-          { error: 'There is nothing here' },
-          { status: 404 }
-        );
-      })
+    renderWithProviders(
+      <MemoryRouter>
+        <ResultList
+          data={{
+            results: [],
+            info: { pages: 1, count: 0, prev: null, next: null },
+          }}
+        />
+      </MemoryRouter>,
+      {
+        preloadedState: { resources: initialState },
+      }
     );
-    renderWithProviders(<ResultList />, {
-      preloadedState: { resources: initialState },
-    });
     const result = await screen.findByText('There is nothing here');
     expect(result).toBeTruthy();
   });
   it('Should render locations list', async () => {
-    server.use(
-      http.get(requestUrl, () => {
-        return HttpResponse.json(location);
-      })
+    renderWithProviders(
+      <MemoryRouter>
+        <ResultList data={location} />
+      </MemoryRouter>,
+      {
+        preloadedState: { resources: initialState },
+      }
     );
-    renderWithProviders(<ResultList />, {
-      preloadedState: { resources: initialState },
-    });
     const cards = await screen.findAllByText('Dimension:');
     expect(cards.length).toEqual(location.results.length);
   });
   it('Should render episodes list', async () => {
-    server.use(
-      http.get(requestUrl, () => {
-        return HttpResponse.json(episode);
-      })
+    renderWithProviders(
+      <MemoryRouter>
+        <ResultList data={episode} />
+      </MemoryRouter>,
+      {
+        preloadedState: { resources: initialState },
+      }
     );
-    renderWithProviders(<ResultList />, {
-      preloadedState: { resources: initialState },
-    });
     const cards = await screen.findAllByText('Episode:');
     expect(cards.length).toEqual(episode.results.length);
   });
