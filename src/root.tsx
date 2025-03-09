@@ -1,9 +1,5 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 import React from 'react';
-import { store } from './redux/store.ts';
-import { Provider } from 'react-redux';
-import ThemeProvider from './providers/theme/theme.provider.tsx';
-import ResourceProvider from './providers/resource/resource.provider.tsx';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,11 +14,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Provider store={store}>
-          <ResourceProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </ResourceProvider>
-        </Provider>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
