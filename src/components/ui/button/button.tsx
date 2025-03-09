@@ -1,5 +1,5 @@
 import React from 'react';
-import './button.scss';
+import styles from './button.module.scss';
 
 interface Props {
   title: string;
@@ -15,7 +15,7 @@ function Button(props: Props): React.ReactNode {
   return (
     <>
       <button
-        className={'button'}
+        className={styles.button}
         type={type}
         onClick={handleClick}
         disabled={disabled}

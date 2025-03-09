@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './select.scss';
+import styles from './select.module.scss';
 
 interface Props {
   options: string[];
@@ -24,20 +24,22 @@ function Select(props: Props): React.ReactNode {
 
   return (
     options && (
-      <div className={'select'}>
-        <span className={'select-label'}>Select resource: </span>
-        <div className={'select-list'}>
+      <div className={styles.select}>
+        <span className={styles['select-label']}>Select resource: </span>
+        <div className={styles['select-list']}>
           <span
-            className={`select-value ${isOpen ? 'open' : ''}`}
+            className={`${styles['select-value']} ${isOpen ? styles.open : ''}`}
             onClick={toggleSelect}
           >
             {selected || defaultValue}
           </span>
-          <ul className={`select-options ${isOpen ? 'open' : ''}`}>
+          <ul
+            className={`${styles['select-options']} ${isOpen ? styles.open : ''}`}
+          >
             {options.map((option) => (
               <li
                 key={option}
-                className={'select-option'}
+                className={styles['select-option']}
                 onClick={() => handleSelect(option)}
               >
                 {option}
@@ -45,7 +47,10 @@ function Select(props: Props): React.ReactNode {
             ))}
           </ul>
           {isOpen && (
-            <div className={'select-overlay'} onClick={toggleSelect}></div>
+            <div
+              className={styles['select-overlay']}
+              onClick={toggleSelect}
+            ></div>
           )}
         </div>
       </div>

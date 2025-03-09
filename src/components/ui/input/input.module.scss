@@ -13,11 +13,9 @@
   }
 }
 
-.light {
-  .input {
-    background-color: theme.$background-light;
-    color: theme.$color-light;
-  }
+[data-theme='light'] .input {
+  background-color: theme.$background-light;
+  color: theme.$color-light;
 }
 
 @media (max-width: 600px) {

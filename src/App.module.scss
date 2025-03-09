@@ -22,14 +22,10 @@
   background-color: theme.$header-background;
   box-shadow: 0 0 5px 5px theme.$header-box-shadow;
 
-  &.light {
-    background-color: theme.$header-background-light;
-    box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
-  }
-
   & .container {
     flex-direction: row;
     align-items: center;
+    gap: 10px;
   }
 }
 
@@ -64,4 +60,9 @@
     flex-direction: column;
     gap: 10px;
   }
+}
+
+[data-theme="light"] .app-header {
+  background-color: theme.$header-background-light;
+  box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
 }

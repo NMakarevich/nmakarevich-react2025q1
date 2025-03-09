@@ -30,8 +30,6 @@
   }
 }
 
-.light {
-  .result-item_favourite:checked:before {
-    filter: invert(56%) sepia(40%) saturate(586%) hue-rotate(64deg) brightness(90%) contrast(90%);
-  }
+[data-theme] .result-item_favourite:checked:before {
+  filter: invert(56%) sepia(40%) saturate(586%) hue-rotate(64deg) brightness(90%) contrast(90%);
 }

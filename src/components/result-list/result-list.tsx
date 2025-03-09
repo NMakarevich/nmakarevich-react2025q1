@@ -1,59 +1,66 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ResultItem from '../result-item/result-item.tsx';
-import './result-list.scss';
+import styles from './result-list.module.scss';
 import ResponseError from '../response-error/response-error.tsx';
 import Loading from '../ui/loading/loading.tsx';
 import Pagination from '../pagination/pagination.tsx';
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router';
-import { useGetCardsQuery } from '../../redux/api.ts';
-import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import { selectRequestUrl } from '../../redux/resources.slice.ts';
-import { parseError } from '../../utils.ts';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { DetailedResponse, Response } from '../../interfaces.ts';
+import DetailedItem from '../detailed-item/detailed-item.tsx';
+import { useAppDispatch } from '../../redux/store.ts';
 import { setResults } from '../../redux/results.slice.ts';
 
-function ResultList(): React.ReactNode {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { resource, id } = useParams();
-  const requestUrl = useAppSelector(selectRequestUrl);
+interface Props {
+  data: Response;
+  detailed: DetailedResponse;
+}
+
+function ResultList(props: Props): React.ReactNode {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [resource, id] = router.query.resource as string[];
+  const { data, detailed } = props;
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
-  const { isFetching, data, error } = useGetCardsQuery(requestUrl, {
-    skip: !requestUrl,
-  });
+  useEffect(() => {
+    if (data.results && data.results.length) dispatch(setResults(data.results));
+    else dispatch(setResults([]));
+  }, [data, dispatch]);
 
   useEffect(() => {
-    if (data && !error) dispatch(setResults(data.results));
-    if (error) dispatch(setResults([]));
-  }, [data, dispatch, error]);
+    const handleRouteChangeStart = () => setLoading(true);
+    const handleRouteChangeComplete = () => setLoading(false);
 
-  function closeDetails() {
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+    };
+  }, [router]);
+
+  async function closeDetails() {
     if (id && location.pathname.includes(id))
-      navigate(`/search/${resource}?${searchParams.toString()}`);
+      await router.push(`/search/${resource}?${searchParams.toString()}`);
   }
 
   return (
     <>
-      {isFetching && <Loading />}
-      {!error && data && data.results && data.results.length > 0 ? (
+      {data && !data.error && data.results && data.results.length > 0 ? (
         <>
-          <div className={'result'}>
+          {loading && <Loading />}
+          <div className={styles.result}>
             <Pagination info={data.info} />
-            <div className={'result-wrapper'}>
-              <div className={'result-list'} onClick={closeDetails}>
+            <div className={styles['result-wrapper']}>
+              <div className={styles['result-list']} onClick={closeDetails}>
                 {data.results.map((result) => (
                   <Link
-                    to={`/search/${resource}/${result.id}?${searchParams.toString()}`}
+                    href={`/search/${resource}/${result.id}?${searchParams.toString()}`}
                     key={`${resource}-${result.id}`}
-                    state={requestUrl}
                   >
                     <ResultItem result={result} />
                   </Link>
@@ -61,14 +68,11 @@ function ResultList(): React.ReactNode {
               </div>
             </div>
           </div>
-          <Outlet />
+          {id && <DetailedItem detailed={detailed} />}
         </>
       ) : (
-        error && (
-          <ResponseError
-            status={parseError(error)?.status || 0}
-            message={parseError(error)?.data.error || 'Unknown error'}
-          />
+        data.error && (
+          <ResponseError status={404} message={data.error || 'Unknown error'} />
         )
       )}
     </>

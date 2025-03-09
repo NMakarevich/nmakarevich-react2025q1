@@ -36,6 +36,7 @@
       background-color: theme.$inputs-background;
       color: theme.$color;
       cursor: pointer;
+      text-decoration: none;
       transition: box-shadow 0.2s;
 
       &:hover {
@@ -45,13 +46,11 @@
   }
 }
 
-.light {
-  .flyout {
-    background-color: theme.$header-background-light;
-    box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
-    &-controls_download {
-      background-color: theme.$background-light;
-      color: theme.$color-light;
-    }
+[data-theme='light'] .flyout {
+  background-color: theme.$header-background-light;
+  box-shadow: 0 0 5px 0 theme.$header-box-shadow-light;
+  &-controls_download {
+    background-color: theme.$background-light;
+    color: theme.$color-light;
   }
 }

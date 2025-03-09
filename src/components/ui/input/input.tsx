@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './input.scss';
+import styles from './input.module.scss';
 
 interface Props {
   type?: string;
@@ -25,7 +25,7 @@ function Input(props: Props): React.ReactNode {
 
   return (
     <input
-      className={'input'}
+      className={styles.input}
       type={type}
       name={name}
       id={id}

@@ -13,8 +13,8 @@ describe('Toggle test', () => {
       />
     );
     const right = screen.getByText('Right');
-    const indicator = container.querySelector('.toggle-indicator');
+    const indicator = container.querySelector('span[class*=toggle-indicator]');
     fireEvent.click(right);
-    expect(indicator?.classList.contains('selected')).toBeTruthy();
+    expect(indicator?.className.includes('selected')).toBeTruthy();
   });
 });

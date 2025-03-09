@@ -5,9 +5,9 @@ import {
   selectFavouritesForResource,
 } from '../../redux/favourites.slice.ts';
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import { useParams } from 'react-router';
+import { useParams } from 'next/navigation';
 import { Card } from '../../interfaces.ts';
-import './favourite-checkbox.scss';
+import styles from './favourite-checkbox.module.scss';
 
 function FavouriteCheckbox(props: { result: Card }): ReactElement {
   const { result } = props;
@@ -45,7 +45,7 @@ function FavouriteCheckbox(props: { result: Card }): ReactElement {
 
   return (
     <input
-      className={'result-item_favourite'}
+      className={styles['result-item_favourite']}
       type={'checkbox'}
       onClick={toggleFavourite}
       checked={isChecked}
