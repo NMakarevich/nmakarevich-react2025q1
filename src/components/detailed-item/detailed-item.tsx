@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import Loading from '../ui/loading/loading.tsx';
 import './detailed-item.scss';
 import ResponseError from '../response-error/response-error.tsx';
 import DetailedItemCharacter from './detailed-item-character.tsx';
@@ -9,20 +8,17 @@ import DetailedItemEpisode from './detailed-item-episode.tsx';
 import FavouriteCheckbox from '../favourite-checkbox/favourite-checkbox.tsx';
 import { useAppDispatch } from '../../redux/store.ts';
 import { deleteDetails, saveDetails } from '../../redux/details.slice.ts';
-import { useGetCardQuery } from '../../redux/api.ts';
-import { parseError } from '../../utils.ts';
+import { Card } from '../../interfaces.ts';
 
-function DetailedItem(): React.ReactNode {
+interface Props {
+  data: Card | undefined;
+}
+
+function DetailedItem({ data }: Props): React.ReactNode {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { resource, id } = useParams();
+  const { resource } = useParams();
   const dispatch = useAppDispatch();
-  const { data, isFetching, error } = useGetCardQuery(
-    `${resource?.slice(0, -1)}/${id}`,
-    {
-      skip: !resource && !id,
-    }
-  );
 
   useEffect(() => {
     if (data) dispatch(saveDetails(data));
@@ -36,37 +32,35 @@ function DetailedItem(): React.ReactNode {
 
   return (
     <div className={'detailed'}>
-      {isFetching && <Loading />}
-      {data && (
-        <div className={'detailed-item'}>
-          <div className={'detailed-close'} onClick={closeDetails}>
-            Close
-          </div>
-          {data && 'image' in data && data.image && (
-            <div className={'detailed-item-content'}>
-              <FavouriteCheckbox result={data} />
-              <DetailedItemCharacter item={data} />
-            </div>
-          )}
-          {data && 'residents' in data && data.residents && (
-            <div className={'detailed-item-content'}>
-              <FavouriteCheckbox result={data} />
-              <DetailedItemLocation item={data} />
-            </div>
-          )}
-          {data && 'air_date' in data && data.air_date && (
-            <div className={'detailed-item-content'}>
-              <FavouriteCheckbox result={data} />
-              <DetailedItemEpisode item={data} />
-            </div>
-          )}
+      <div className={'detailed-item'}>
+        <div className={'detailed-close'} onClick={closeDetails}>
+          Close
         </div>
-      )}
-      {error && (
-        <ResponseError
-          status={parseError(error)?.status || 0}
-          message={parseError(error)?.data.error || 'Unknown error'}
-        />
+        {data && (
+          <>
+            {data && 'image' in data && data.image && (
+              <div className={'detailed-item-content'}>
+                <FavouriteCheckbox result={data} />
+                <DetailedItemCharacter item={data} />
+              </div>
+            )}
+            {data && 'residents' in data && data.residents && (
+              <div className={'detailed-item-content'}>
+                <FavouriteCheckbox result={data} />
+                <DetailedItemLocation item={data} />
+              </div>
+            )}
+            {data && 'air_date' in data && data.air_date && (
+              <div className={'detailed-item-content'}>
+                <FavouriteCheckbox result={data} />
+                <DetailedItemEpisode item={data} />
+              </div>
+            )}
+          </>
+        )}
+      </div>
+      {!data && (
+        <ResponseError status={404} message={'No detailed items found.'} />
       )}
     </div>
   );

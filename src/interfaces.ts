@@ -59,11 +59,14 @@ export interface IThemeContext {
   setIsSwitched: (isSwitched: boolean) => void;
 }
 
-export type Resources = { [key: string]: string };
-
 export interface ResponseError {
   status: number;
   data: {
     error: string;
   };
+}
+
+export interface IResourceContext {
+  selectedResource: string;
+  setSelectedResource: (resource: string) => void;
 }

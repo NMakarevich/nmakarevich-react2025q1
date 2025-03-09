@@ -4,7 +4,6 @@ import detailsReducer from './details.slice.ts';
 import resourcesReducer from './resources.slice.ts';
 import resultsReducer from './results.slice.ts';
 import { useDispatch, useSelector } from 'react-redux';
-import { rickAndMortyApi } from './api.ts';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 export const store = configureStore({
@@ -13,10 +12,7 @@ export const store = configureStore({
     details: detailsReducer,
     resources: resourcesReducer,
     results: resultsReducer,
-    [rickAndMortyApi.reducerPath]: rickAndMortyApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(rickAndMortyApi.middleware),
 });
 
 setupListeners(store.dispatch);
@@ -26,15 +22,12 @@ const rootReducer = combineReducers({
   details: detailsReducer,
   resources: resourcesReducer,
   results: resultsReducer,
-  [rickAndMortyApi.reducerPath]: rickAndMortyApi.reducer,
 });
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: rootReducer,
     preloadedState,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(rickAndMortyApi.middleware),
   });
 };
 

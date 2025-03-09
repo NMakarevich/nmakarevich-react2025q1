@@ -1,23 +1,18 @@
 import { describe, expect } from 'vitest';
-import { response } from './mock.ts';
-import { fireEvent, screen } from '@testing-library/react';
+import { episode, location, response } from './mock.ts';
+import { screen } from '@testing-library/react';
 import ResultItem from '../components/result-item/result-item.tsx';
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
-import ResultList from '../components/result-list/result-list.tsx';
 import { renderWithProviders } from './test-utils.tsx';
 
-const requestUrl = 'https://rickandmortyapi.com/api/character/';
-
-const server = setupServer(
-  http.get(requestUrl, () => {
-    return HttpResponse.json(response);
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router');
+  return {
+    ...actual,
+    useNavigation: vi.fn(() => ({
+      location: vi.fn(),
+    })),
+  };
+});
 
 describe('ResultItem', () => {
   it('Should render correctly', () => {
@@ -27,21 +22,18 @@ describe('ResultItem', () => {
     const nameInCard = screen.getByText(name).textContent;
     expect(nameInCard).toEqual('Name: Rick Sanchez');
   });
-  it('Should open detailed card', async () => {
-    const initialState = {
-      resource: 'characters',
-      url: 'https://rickandmortyapi.com/api/character',
-      requestUrl: 'https://rickandmortyapi.com/api/character?page=1&name=rick',
-      resources: null,
-    };
-    const initialPath = window.location.pathname;
-    renderWithProviders(<ResultList />, {
-      preloadedState: {
-        resources: initialState,
-      },
-    });
-    const cards = await screen.findAllByText('Name:');
-    fireEvent.click(cards[0]);
-    expect(initialPath === window.location.pathname).toBeFalsy();
+  it('Should render episodes item', () => {
+    const item = episode.results[0];
+    renderWithProviders(<ResultItem result={item} />);
+    const name = 'Pilot';
+    const nameInCard = screen.getByText(name).textContent;
+    expect(nameInCard).toEqual('Name: Pilot');
+  });
+  it('Should render locations item', () => {
+    const item = location.results[0];
+    renderWithProviders(<ResultItem result={item} />);
+    const name = 'Earth (C-137)';
+    const nameInCard = screen.getByText(name).textContent;
+    expect(nameInCard).toEqual('Name: Earth (C-137)');
   });
 });
