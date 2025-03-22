@@ -1,25 +1,21 @@
-import React from 'react';
+'use client';
+
+import React, { useContext } from 'react';
 import Select from '../ui/select/select.tsx';
-import { useAppDispatch } from '../../redux/store.ts';
-import { setResource } from '../../redux/resources.slice.ts';
-import { useRouter } from 'next/router';
-import { API_ENDPOINTS, RESOURCES } from '../../constants.ts';
+import { RESOURCES } from '../../constants.ts';
+import { ResourceContext } from '../../providers/resource/resource.context.ts';
 
 function SelectResource(): React.ReactNode {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const initResource = RESOURCES.includes(router.query.resource as string)
-    ? (router.query.resource as string)
-    : Object.keys(API_ENDPOINTS)[0];
+  const { selectedResource, setSelectedResource } = useContext(ResourceContext);
 
   function handleSelect(option: string) {
-    dispatch(setResource({ resource: option, url: API_ENDPOINTS[option] }));
+    setSelectedResource(option);
   }
 
   return (
     <Select
       options={RESOURCES}
-      defaultValue={initResource}
+      defaultValue={selectedResource}
       handleSelected={handleSelect}
     />
   );

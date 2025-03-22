@@ -39,7 +39,7 @@ export interface Episode {
   created: string;
 }
 
-export interface Response {
+export interface CardsResponse {
   results: Card[];
   info: ResponseInfo;
   error?: string;
@@ -54,10 +54,7 @@ export interface ResponseInfo {
   prev: string | null;
 }
 
-export interface DetailedResponse {
-  data: Card;
-  error?: string;
-}
+export type DetailedResponse = Card | { error: string };
 
 export interface IThemeContext {
   isSwitched: boolean;
@@ -69,4 +66,26 @@ export interface ResponseError {
   data: {
     error: string;
   };
+}
+
+export interface IResourceContext {
+  selectedResource: string;
+  setSelectedResource: (resource: string) => void;
+}
+
+export interface SearchParams {
+  resource: string;
+  id: string | undefined;
+  page: string;
+  name: string | undefined;
+}
+
+export type Favourites = { [key: string]: Card[] };
+
+export interface IFavourites {
+  getFavouritesIds: () => number[];
+  getFavourites: () => Favourites;
+  addToFavourites: (resource: string, item: Card) => void;
+  removeFromFavourites: (resource: string, id: number) => void;
+  unselectAll: () => void;
 }

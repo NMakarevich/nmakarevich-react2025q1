@@ -1,6 +1,6 @@
 import { describe, expect } from 'vitest';
-import Loading from '../components/ui/loading/loading.tsx';
 import { render } from '@testing-library/react';
+import Loading from '../../app/search/[...resource]/loading.tsx';
 
 describe('Loading', () => {
   it('renders correctly', () => {

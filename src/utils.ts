@@ -10,3 +10,9 @@ export function parseError(
   }
   return null;
 }
+
+export function generateSearchParams(page: string, name: string | undefined) {
+  const params = new URLSearchParams([['page', page]]);
+  if (name) params.set('name', name);
+  return params.toString();
+}

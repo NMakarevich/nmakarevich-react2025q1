@@ -1,17 +1,15 @@
 import { describe, expect, vi } from 'vitest';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import Search from '../components/search/search.tsx';
-import { renderWithProviders } from './test-utils.tsx';
 
 vi.mock('next/navigation', async () => ({
+  useParams: () => ({
+    resource: ['characters'],
+  }),
   useSearchParams: () => ({
     get: vi.fn(),
   }),
-}));
-
-vi.mock('next/router', async () => ({
   useRouter: () => ({
-    query: { resource: ['characters'] },
     push: vi.fn(),
   }),
 }));
@@ -19,7 +17,7 @@ vi.mock('next/router', async () => ({
 describe('Search', () => {
   it('Should save search term to localStorage', () => {
     const searchTerm = 'rick';
-    renderWithProviders(<Search />);
+    render(<Search />);
     localStorage.clear();
     const searchInput = screen.getByRole('textbox');
     fireEvent.change(searchInput, { target: { value: searchTerm } });
@@ -30,7 +28,7 @@ describe('Search', () => {
   });
   it('Should insert search term from localStorage to input', () => {
     const searchTerm = localStorage.getItem('search');
-    renderWithProviders(<Search />);
+    render(<Search />);
     const input: HTMLInputElement = screen.getByRole('textbox');
     const inputValue = input.value;
     expect(inputValue).toEqual(searchTerm);

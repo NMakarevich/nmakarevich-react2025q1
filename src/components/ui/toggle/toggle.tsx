@@ -1,4 +1,6 @@
-import { ReactNode, useState } from 'react';
+'use client';
+
+import React, { ReactNode, useState } from 'react';
 import styles from './toggle.module.scss';
 
 interface Props {
@@ -8,7 +10,7 @@ interface Props {
   onToggle: (isSwitched: boolean) => void;
 }
 
-function Toggle(props: Props): ReactNode {
+function Toggle(props: Props): React.ReactNode {
   const { option1, option2, onToggle, initState } = props;
   const [isSwitched, setIsSwitched] = useState(initState);
 

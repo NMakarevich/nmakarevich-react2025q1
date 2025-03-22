@@ -1,34 +1,39 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
-import {
-  addFavourite,
-  removeFavourite,
-  selectFavouritesForResource,
-} from '../../redux/favourites.slice.ts';
-import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
+'use client';
+
+import React, {
+  ChangeEvent,
+  ReactElement,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useParams } from 'next/navigation';
 import { Card } from '../../interfaces.ts';
 import styles from './favourite-checkbox.module.scss';
+import { FavouritesContext } from '../../providers/favourites/favourites.context.ts';
+import { RESOURCES } from '../../constants.ts';
 
 function FavouriteCheckbox(props: { result: Card }): ReactElement {
   const { result } = props;
-  const { resource } = useParams();
-  const dispatch = useAppDispatch();
-  const favourites = useAppSelector(selectFavouritesForResource);
+  const params = useParams<{ resource: string[] }>();
+  const resource = params ? params.resource[0] : RESOURCES[0];
+  const { getFavouritesIds, addToFavourites, removeFromFavourites } =
+    useContext(FavouritesContext);
   const [isChecked, setIsChecked] = useState(isCheckedInit);
 
   function isCheckedInit() {
-    if (favourites) {
-      return favourites.includes(result.id);
+    if (getFavouritesIds()) {
+      return getFavouritesIds().includes(result.id);
     }
     return false;
   }
 
   useEffect(() => {
-    if (favourites) {
-      if (favourites.includes(result.id)) setIsChecked(true);
+    if (getFavouritesIds()) {
+      if (getFavouritesIds().includes(result.id)) setIsChecked(true);
       else setIsChecked(false);
     }
-  }, [favourites, result]);
+  }, [getFavouritesIds, resource, result]);
 
   function toggleFavourite(event: React.MouseEvent<HTMLElement>) {
     event.stopPropagation();
@@ -37,8 +42,8 @@ function FavouriteCheckbox(props: { result: Card }): ReactElement {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { target } = event;
     if (resource) {
-      if (!target.checked) dispatch(removeFavourite(result));
-      else dispatch(addFavourite(result));
+      if (!target.checked) removeFromFavourites(resource[0], result.id);
+      else addToFavourites(resource[0], result);
     }
     setIsChecked(!isChecked);
   }

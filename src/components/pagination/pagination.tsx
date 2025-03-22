@@ -1,63 +1,53 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import React from 'react';
 import { ResponseInfo } from '../../interfaces.ts';
-import Button from '../ui/button/button.tsx';
 import styles from './pagination.module.scss';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Button from '../ui/button/button.tsx';
 
 interface Props {
   info: ResponseInfo;
+  resource: string;
+  page: string;
+  name: string | undefined;
+}
+
+enum DIRECTION {
+  prev = -1,
+  next = 1,
 }
 
 function Pagination(props: Props): React.ReactNode {
   const { pages, prev, next } = props.info;
-  const searchParams = useSearchParams();
-  const [page, setPage] = useState(
-    parseInt(searchParams.get('page') || '1', 10)
-  );
+  const { page, resource, name } = props;
   const router = useRouter();
-  const [resource] = router.query.resource as string[];
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const urlPage = searchParams.get('page') || '1';
-    if (parseInt(urlPage) !== page) setPage(parseInt(urlPage));
-  }, [page, searchParams]);
-
-  function getSearchParams() {
-    const url = new URL(window.location.href);
-    return new URLSearchParams(url.search);
+  function generateSearchParams() {
+    const params = new URLSearchParams(searchParams?.toString());
+    if (name) params.set('name', name);
+    return params;
   }
 
-  async function prevPage() {
-    const params = getSearchParams();
-    if (prev) {
-      params.set('page', (page - 1).toString());
-      setPage((prev) => prev - 1);
-      await router.push(`/search/${resource as string}?${params.toString()}`);
-    }
-  }
-
-  async function nextPage() {
-    const params = getSearchParams();
-    if (next) {
-      params.set('page', (page + 1).toString());
-      setPage((prev) => prev + 1);
-      await router.push(`/search/${resource as string}?${params.toString()}`);
-    }
+  function navigate(direction: number) {
+    const params = generateSearchParams();
+    params.set('page', (parseInt(page) + direction).toString());
+    router.push(`/search/${resource}?${params.toString()}`);
   }
 
   return (
     <div className={styles.pagination}>
       <Button
         title={'Prev page'}
-        handleClick={prevPage}
-        disabled={page === 1}
+        handleClick={() => navigate(DIRECTION.prev)}
+        disabled={!prev}
       />
       <span className={styles['pagination-info']}>{`${page} of ${pages}`}</span>
       <Button
         title={'Next page'}
-        handleClick={nextPage}
-        disabled={page === pages}
+        handleClick={() => navigate(DIRECTION.next)}
+        disabled={!next}
       />
     </div>
   );
