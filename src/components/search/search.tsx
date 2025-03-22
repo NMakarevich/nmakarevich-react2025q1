@@ -3,28 +3,29 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Input from '../ui/input/input.tsx';
 import Button from '../ui/button/button.tsx';
-import { LOCAL_STORAGE_KEYS } from '../../constants.ts';
+import { LOCAL_STORAGE_KEYS, RESOURCES } from '../../constants.ts';
 import styles from './search.module.scss';
 import useLocalStorage from '../../hooks/local-storage.tsx';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ResourceContext } from '../../providers/resource/resource.context.ts';
 
 function Search(): React.ReactNode {
-  const { resource } = useParams<{ resource: string }>();
+  const params = useParams<{ resource: string }>();
+  const resource = params ? params.resource : RESOURCES[0];
   const router = useRouter();
   const [localStorageSearch, setLocalStorageSearch] = useLocalStorage(
     LOCAL_STORAGE_KEYS.search
   );
   const searchParams = useSearchParams();
   const [search, setSearch] = useState<string>(
-    searchParams.get('name') || localStorageSearch
+    searchParams?.get('name') || localStorageSearch
   );
   const { selectedResource } = useContext(ResourceContext);
 
   const updateURL = useCallback(() => {
-    const name = searchParams.get('name');
+    const name = searchParams?.get('name');
     if (localStorageSearch && !name) {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       params.set('name', localStorageSearch);
       router.push(`/search/${resource}?${params.toString()}`);
     }
@@ -36,10 +37,10 @@ function Search(): React.ReactNode {
 
   function handleButtonClick() {
     setLocalStorageSearch(search);
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString());
     if (search) params.set('name', search);
     else params.delete('name');
-    if (resource !== selectedResource || search !== searchParams.get('name')) {
+    if (resource !== selectedResource || search !== searchParams?.get('name')) {
       params.set('page', '1');
     }
     router.push(`/search/${selectedResource}?${params.toString()}`);

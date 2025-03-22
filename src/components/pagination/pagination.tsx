@@ -25,7 +25,7 @@ function Pagination(props: Props): React.ReactNode {
   const searchParams = useSearchParams();
 
   function generateSearchParams() {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString());
     if (name) params.set('name', name);
     return params;
   }

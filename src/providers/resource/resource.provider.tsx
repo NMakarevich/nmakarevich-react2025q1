@@ -3,13 +3,15 @@
 import React, { ReactNode, useState } from 'react';
 import { ResourceContext } from './resource.context.ts';
 import { useParams } from 'next/navigation';
+import { RESOURCES } from '../../constants.ts';
 
 function ResourceProvider({
   children,
 }: {
   children: ReactNode;
 }): React.ReactNode {
-  const [resource] = useParams<{ resource: string[] }>().resource;
+  const params = useParams<{ resource: string[] }>();
+  const resource = params ? params.resource[0] : RESOURCES[0];
   const [selectedResource, setSelectedResource] = useState<string>(resource);
 
   return (

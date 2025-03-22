@@ -22,7 +22,7 @@ function DetailedItem(props: Props): React.ReactNode {
   const router = useRouter();
 
   function closeDetails() {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString());
     router.push(`/search/${resource}?${params.toString()}`);
   }
 

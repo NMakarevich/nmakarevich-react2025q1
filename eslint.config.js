@@ -6,6 +6,7 @@ import react from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import reactCompiler from 'eslint-plugin-react-compiler';
+import next from '@next/eslint-plugin-next';
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -22,6 +23,7 @@ export default tseslint.config(
     },
     plugins: {
       react,
+      '@next/next': next,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'react-compiler': reactCompiler,

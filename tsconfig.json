@@ -1,11 +1,6 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ],
   "include": [
+    "src",
     "./dist/types/**/*.ts",
     "./next-env.d.ts"
   ],
@@ -18,15 +13,29 @@
         "name": "next"
       }
     ],
-    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "types": ["vitest/globals"],
+
+    /* Bundler mode */
+    "moduleDetection": "force",
+
+    /* Linting */
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "allowImportingTsExtensions": true,
     "noEmit": true,
     "incremental": true,
     "module": "esnext",

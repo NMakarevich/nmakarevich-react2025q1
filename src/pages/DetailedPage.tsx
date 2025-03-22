@@ -8,6 +8,7 @@ interface Props {
 }
 
 async function DetailedPage(props: Props): Promise<ReactNode> {
+  if (!props.params) return null;
   const { resource, id } = props.params;
 
   const response = await fetch(`${API_ENDPOINTS[resource]}/${id}`);

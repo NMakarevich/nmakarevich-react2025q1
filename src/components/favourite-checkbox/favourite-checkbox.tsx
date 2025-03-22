@@ -11,10 +11,12 @@ import { useParams } from 'next/navigation';
 import { Card } from '../../interfaces.ts';
 import styles from './favourite-checkbox.module.scss';
 import { FavouritesContext } from '../../providers/favourites/favourites.context.ts';
+import { RESOURCES } from '../../constants.ts';
 
 function FavouriteCheckbox(props: { result: Card }): ReactElement {
   const { result } = props;
-  const [resource] = useParams<{ resource: string[] }>().resource;
+  const params = useParams<{ resource: string[] }>();
+  const resource = params ? params.resource[0] : RESOURCES[0];
   const { getFavouritesIds, addToFavourites, removeFromFavourites } =
     useContext(FavouritesContext);
   const [isChecked, setIsChecked] = useState(isCheckedInit);
@@ -40,8 +42,8 @@ function FavouriteCheckbox(props: { result: Card }): ReactElement {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { target } = event;
     if (resource) {
-      if (!target.checked) removeFromFavourites(resource, result.id);
-      else addToFavourites(resource, result);
+      if (!target.checked) removeFromFavourites(resource[0], result.id);
+      else addToFavourites(resource[0], result);
     }
     setIsChecked(!isChecked);
   }

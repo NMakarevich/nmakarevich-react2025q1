@@ -11,6 +11,7 @@ interface Props {
 }
 
 async function ResultsPage(props: Props): Promise<ReactNode> {
+  if (!props.params) return null;
   const { resource, id, page, name } = props.params;
 
   const requestUrl = `${API_ENDPOINTS[resource]}?${generateSearchParams(page, name)}`;
